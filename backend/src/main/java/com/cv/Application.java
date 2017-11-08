@@ -1,4 +1,4 @@
-package cv;
+package com.cv;
 
 import java.util.Arrays;
 

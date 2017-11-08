@@ -1,4 +1,4 @@
-package cv;
+package com.cv;
 
 public class TestData {
   private final String testMsg;
