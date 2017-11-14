@@ -1,16 +1,21 @@
 package com.cv;
 
-import java.util.Arrays;
-
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import com.cv.coinigy.CoinigyRest;
+import com.cv.util.Rest;
 
 @SpringBootApplication
 public class Application {
   public static void main(String[] args) {
+    // Reminder: you have to change the template to an actual context file.
+    ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
+    
+    // Inject to Rest controller
+    Rest.rest = (CoinigyRest)ctx.getBean("coinigyAPI");
+
     SpringApplication.run(Application.class, args);
   }
 }
