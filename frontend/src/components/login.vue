@@ -22,3 +22,29 @@
 		
 	</div>
 </template>
+
+<script>
+  import { GC_USER_ID, GC_AUTH_TOKEN } from '../constants/settings'
+
+  export default {
+    name: 'login',
+    data () {
+      return {
+        email: '',
+        login: true,
+        name: '',
+        password: ''
+      }
+    },
+    methods: {
+      confirm () {
+        //implement; once login is confirmed, save user tokens
+      },
+      saveUserData (id, token) {
+        localStorage.setItem(GC_USER_ID, id)
+        localStorage.setItem(GC_AUTH_TOKEN, token)
+        this.$root.$data.userId = localStorage.getItem(GC_USER_ID)
+      }
+    }
+  }
+</script>

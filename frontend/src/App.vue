@@ -19,11 +19,24 @@
 <script>
 import register from './components/register.vue'
 import login from './components/login.vue'
+import { GC_USER_ID, GC_AUTH_TOKEN } from './constants/settings.js'
 
 export default {
   name: 'app',
   components: {
   	login, register
+  },
+  computed: {
+      userId () {
+        return this.$root.$data.userId
+      }
+  },
+  methods: {
+      logout () {
+        localStorage.removeItem(GC_USER_ID)
+        localStorage.removeItem(GC_AUTH_TOKEN)
+        this.$root.$data.userId = localStorage.getItem(GC_USER_ID)
+      }
   }
 }
 </script>
