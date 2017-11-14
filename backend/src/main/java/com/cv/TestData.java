@@ -3,44 +3,31 @@ package com.cv;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 public class TestData {
-  private final String testMsg;
-  private final String name;
-
   /**
    * API Handlers
    */
   private ResponseHandler<JsonObject> responseHandler;
   private CloseableHttpClient httpclient;
-  private String X_API_KEY_STRING = "211c66b10d53944dcd6e69b181d078d0";
-  private String X_API_KEY_SECRET_STRING = "ea5311c878ecdbe7d4587ef668b12d5d";
-  
+
   /******** METHODS **************/
-	
+    
   public TestData(String testMsg, String name) {
-    this.testMsg = testMsg;
-    this.name = name;
     
     //Create client and response handler for calls to API
     httpclient = HttpClients.createDefault();
@@ -56,8 +43,10 @@ public class TestData {
                       statusLine.getReasonPhrase());
           }
           if (entity == null) {
+            System.out.println("No content");
               throw new ClientProtocolException("Response contains no content");
       }
+          
       Gson gson = new GsonBuilder().create();
 
       Reader reader = new InputStreamReader(entity.getContent());
@@ -66,24 +55,17 @@ public class TestData {
 };
   }
 
-  public String getTestMsg() {
-    return testMsg;
-  }
-
-  public String getName() {
-    return name;
-  }
-  
   /**
    * Helper method to execute the HTTP call
-   * @param httpPost the HTTP Post containing the desired API call
+   * @param httpGet the HTTP Get containing the desired API call
    * @return JsonObject containing the API call results
    */
-  private JsonObject executeCall(HttpPost httpPost) {
+  private JsonObject executeCall(String url) {
+    HttpGet httpGet = new HttpGet(url);
     JsonObject result = null;
     try {
       result = null;
-      result = httpclient.execute(httpPost, responseHandler);
+      result = httpclient.execute(httpGet, responseHandler);
     } catch (ClientProtocolException e) {
       e.printStackTrace();
     } catch (IOException e) {
@@ -97,56 +79,78 @@ public class TestData {
    * Method to return all supported exchanges
    * @return JsonObject containing the supported exchanges
    */
-  public JsonObject retrieveExchanges() {   
-    HttpPost httpPost = new HttpPost(APICall.EXCHANGES_URL);
-    httpPost.addHeader("content-type", APICall.APPLICATION_JSON);
-    httpPost.addHeader("X-API-KEY", X_API_KEY_STRING);
-    httpPost.addHeader("X-API-SECRET", X_API_KEY_SECRET_STRING);
+  public JsonObject getExchanges() {   
+    String url = "https://api.cryptowat.ch/assets";
     
-    JsonObject result = executeCall(httpPost);
+    JsonObject result = executeCall(url);
     return result;
   }
   
   /**
-   * Method to return all supported markets
-   * @return JsonObject containing the supported markets
+   * Method to return all supported markets and accompanying URL for market data
+   * @return JsonObject containing the supported exchanges
    */
-  public JsonObject retrieveMarkets() {   
-    HttpPost httpPost = new HttpPost(APICall.MARKETS_URL);
-    httpPost.addHeader("content-type", APICall.APPLICATION_JSON);
-    httpPost.addHeader("X-API-KEY", X_API_KEY_STRING);
-    httpPost.addHeader("X-API-SECRET", X_API_KEY_SECRET_STRING);
-    
-    ArrayList<NameValuePair> bodyParameters = new ArrayList<NameValuePair>();
-    bodyParameters.add(new BasicNameValuePair("exchange_code", APICall.DEFAULT_EXCHANGE_CODE));
-    UrlEncodedFormEntity entity = new UrlEncodedFormEntity(bodyParameters, Consts.UTF_8);
-    httpPost.setEntity(entity);
-    
-    JsonObject result = executeCall(httpPost);
+  public JsonObject getMarkets() {   
+    String url = "https://api.cryptowat.ch/markets";
+    JsonObject result = executeCall(url);
     return result;
   }
   
-  /** NOT WORKING CURRENTLY? DONT KNOW WHY
-   * Method to return all market data for a single market (currency); type = "all"
-   * @return JsonObject containing the market data
-   */
-  public JsonObject retrieveMarketData(String market) {   
-    HttpPost httpPost = new HttpPost(APICall.MARKET_DATA_ALL_URL);
-    httpPost.addHeader("content-type", APICall.APPLICATION_JSON);
-    httpPost.addHeader("X-API-KEY", X_API_KEY_STRING);
-    httpPost.addHeader("X-API-SECRET", X_API_KEY_SECRET_STRING);
-    
-    ArrayList<NameValuePair> bodyParameters = new ArrayList<NameValuePair>();
-    bodyParameters.add(new BasicNameValuePair("exchange_code", APICall.DEFAULT_EXCHANGE_CODE));
-    bodyParameters.add(new BasicNameValuePair("exchange_market", "BTC/USD"));
-    bodyParameters.add(new BasicNameValuePair("type", "orders"));
-
-    UrlEncodedFormEntity entity = new UrlEncodedFormEntity(bodyParameters, Consts.UTF_8);
-    httpPost.setEntity(entity);
-    
-    JsonObject result = executeCall(httpPost);
+  
+  //Markets: ltcusd, btcusd, ltcbtc
+  public JsonObject getMarketDataURLs(String market) {   
+    String url = "https://api.cryptowat.ch/markets/gdax/" + market;
+    JsonObject result = executeCall(url);
     return result;
   }
-
+  
+  //Markets: ltcusd, btcusd, ltcbtc
+  public JsonObject getLastPrice(String market) {   
+    String url = "https://api.cryptowat.ch/markets/gdax/" + market + "/price";
+    JsonObject result = executeCall(url);
+    return result;
+  }
+  
+  //Markets: ltcusd, btcusd, ltcbtc
+  public JsonObject getCurrencySummary(String market) {   
+    String url = "https://api.cryptowat.ch/markets/gdax/" + market + "/summary";
+    
+    JsonObject result = executeCall(url);
+    return result;
+  }
+  
+  public JsonObject getTrades(String market, int limitTrades) {   
+    String url = "https://api.cryptowat.ch/markets/gdax/" + market + "/trades";
+    String params = "?limit=" + limitTrades;
+    url += params;
+    
+    JsonObject result = executeCall(url);
+    return result;
+  }
+  
+  public JsonObject getOrders(String market) {   
+    String url = "https://api.cryptowat.ch/markets/gdax/" + market + "/orderbook";
+    JsonObject result = executeCall(url);
+    return result;
+  }
+  
+  public JsonObject getCandlestick(String market) {   
+    String url = "https://api.cryptowat.ch/markets/gdax/" + market + "/ohlc";
+    JsonObject result = executeCall(url);
+    return result;
+  }
+  
+  public JsonObject getAggregateMarketData() {   
+    String url = "https://api.cryptowat.ch/markets/prices";
+    JsonObject result = executeCall(url);
+    return result;
+  }
+  
+  public JsonObject getAggregateMarketSummaries() {   
+    String url = "https://api.cryptowat.ch/markets/summaries";
+    
+    JsonObject result = executeCall(url);
+    return result;
+  }
   
 }
