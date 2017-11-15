@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -16,7 +17,8 @@ import com.google.gson.JsonObject;
 
 public class RestUtil {
   public enum REQUEST_TYPE {
-    POST
+    POST,
+    GET
   };
 
   private HttpClient client = HttpClientBuilder.create().build();
@@ -25,15 +27,26 @@ public class RestUtil {
     throw new IllegalStateException("No default implementation for RestUtil.generatePost!");
   }
 
+  protected HttpGet generateGet(String endpoint) {
+    throw new IllegalStateException("No default implementation for RestUtil.generateGet!");
+  }
+
   public JsonObject post(String endpoint) {
     return makeRequest(endpoint, REQUEST_TYPE.POST);
+  }
+  
+  public JsonObject get(String endpoint) {
+    return makeRequest(endpoint, REQUEST_TYPE.GET);
   }
 
   public JsonObject makeRequest(String endpoint, REQUEST_TYPE type) {
     try {
       HttpUriRequest uriRequest = null;
       if (type == REQUEST_TYPE.POST) {
-          uriRequest = generatePost(endpoint);
+        uriRequest = generatePost(endpoint);
+      }
+      else if (type == REQUEST_TYPE.GET) {
+        uriRequest = generateGet(endpoint);
       }
       else {
         throw new IllegalArgumentException("Invalid request type " + type);

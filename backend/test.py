@@ -17,4 +17,4 @@ def get_endpoint(endpoint):
     print(res.text)
 
 if __name__ == "__main__":
-    get_endpoint("/test")
+    get_endpoint("/exchange/data?fromCur=DOT&toCur=BTC&time=24")

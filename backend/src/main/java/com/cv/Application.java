@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.cv.coinigy.CoinigyRest;
+import com.cv.cryptopia.CryptopiaRest;
 import com.cv.util.Rest;
 
 @SpringBootApplication
@@ -14,7 +15,9 @@ public class Application {
     ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
     
     // Inject to Rest controller
-    Rest.rest = (CoinigyRest)ctx.getBean("coinigyAPI");
+    //Rest.rest = (CoinigyRest)ctx.getBean("coinigyAPI");
+
+    Rest.rest = new CryptopiaRest();
 
     SpringApplication.run(Application.class, args);
   }
