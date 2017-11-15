@@ -19,7 +19,7 @@ CREATE TABLE CurrencyInfo(
     description varchar (500)
 );
 
-INSERT INTO CurrencyInfo (ticker) VALUES ('BTC');
+
 
 
 DROP TABLE UserWatchList;
@@ -31,4 +31,4 @@ CREATE TABLE UserWatchList(
     FOREIGN KEY fk2 (currencyID) REFERENCES CurrencyInfo(currencyID)
 );
 
-INSERT INTO UserWatchList (userID, currencyID) VALUES (1, 1);
+/*INSERT INTO UserWatchList (userID, currencyID) VALUES (1, 1); COMMENTED OUT INORDER TO ADD ALL TICKERS
