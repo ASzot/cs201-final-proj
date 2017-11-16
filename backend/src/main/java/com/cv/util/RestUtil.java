@@ -1,12 +1,11 @@
 package com.cv.util;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -21,7 +20,8 @@ public class RestUtil {
     GET
   };
 
-  private HttpClient client = HttpClientBuilder.create().build();
+  private RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(15 * 1000).build();
+  private HttpClient client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
 
   protected HttpPost generatePost(String endpoint) {
     throw new IllegalStateException("No default implementation for RestUtil.generatePost!");

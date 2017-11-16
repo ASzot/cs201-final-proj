@@ -1,26 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
-//import navbar from '../components/navbar'
-//import TodoList from '../components/TodoList'
-import register from '../components/register'
-import login from '../components/login'
+import NavView from '@/components/NavView'
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Hello',
-      component: HelloWorld
-    },
-    {
-        path: '/login',
-        component: login
-     },
-     {
-    	 	path: '/register',
-    	 	component: register
-     }
+      name: 'NavView',
+      component: NavView
+    }
   ]
 })

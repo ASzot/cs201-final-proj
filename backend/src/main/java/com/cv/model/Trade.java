@@ -24,6 +24,15 @@ public class Trade {
   @SerializedName("Timestamp")
   private long timestamp;
 
+  private String timeStr;
+
+  public void setTimeStr(String timeStr) {
+    this.timeStr = timeStr;
+  }
+
+  public String getTimeStr() {
+    return this.timeStr;
+  }
 
   public int getTradePairId() {
     return tradePairId;
