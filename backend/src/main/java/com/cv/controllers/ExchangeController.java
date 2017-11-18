@@ -56,17 +56,14 @@ public class ExchangeController {
       @RequestParam(value="fromCur", required=true) String fromCur,
       @RequestParam(value="toCur", required=true) String toCur,
       @RequestParam(value="period", required=false, defaultValue="") String periodStr,
-      @RequestParam(value="begin", required=false, defaultValue="-1") String begin,
-      @RequestParam(value="end", required=false, defaultValue="-1") String end) {
+      @RequestParam(value="begin", required=false, defaultValue="-1") long begin,
+      @RequestParam(value="end", required=false, defaultValue="-1") long end) {
 
     String marketTicket = fromCur + toCur;
 
-    long beginUnix = DateToUnix.convert(begin);
-    long endUnix = DateToUnix.convert(end);
-
     System.out.println("Got request");
     List<String> periods = Arrays.asList(periodStr.split(","));
-    CandleStickSeries candles = getCrypowatchApi().getCandlestick(marketTicket, periods, beginUnix, endUnix);
+    CandleStickSeries candles = getCrypowatchApi().getCandlestick(marketTicket, periods, begin, end);
     if (candles == null) {
       throw new IllegalStateException();
     }
