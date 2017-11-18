@@ -33,6 +33,7 @@ public class ExchangeController {
     return api;
   }
 
+
   @CrossOrigin(origins="http://localhost:8080")
   @RequestMapping(value="/exchange/candle", method=RequestMethod.GET)
   public @ResponseBody CandleStickSeries getCandle(

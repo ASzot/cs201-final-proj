@@ -21,7 +21,7 @@ public class RestUtil {
   };
 
   private RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(15 * 1000).build();
-  private HttpClient client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
+  private HttpClient client ; //= HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
 
   protected HttpPost generatePost(String endpoint) {
     throw new IllegalStateException("No default implementation for RestUtil.generatePost!");
@@ -45,15 +45,17 @@ public class RestUtil {
       if (type == REQUEST_TYPE.POST) {
         uriRequest = generatePost(endpoint);
       }
-      else if (type == REQUEST_TYPE.GET) {
-        uriRequest = generateGet(endpoint);
+      else if (type == REQUEST_TYPE.GET) { 
+        uriRequest = generateGet(endpoint); //cryptowatch API currently (for nihar)
       }
       else {
         throw new IllegalArgumentException("Invalid request type " + type);
       }
 
+      //Nihar -- added
+      this.client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
       HttpResponse response = client.execute(uriRequest);
-
+      
       if (response.getStatusLine().getStatusCode() == 200) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
         StringBuilder builder = new StringBuilder();
@@ -63,7 +65,13 @@ public class RestUtil {
 
         String responseStr = builder.toString();
         JsonObject convertedObject = new Gson().fromJson(responseStr, JsonObject.class);
+        
+        //Delete later
+//        System.out.println("Received response in RestUtil: Object Received:");
+//        System.out.println(convertedObject);
+
         return convertedObject;
+        
       }
       else {
         return null;

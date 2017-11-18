@@ -77,6 +77,14 @@ public class CryptoWatchApi {
   //  return result;
   //}
 
+  //print information regarding remaining time before API rate limitation
+  private void printAPIRateLimitations(JsonObject result) {
+    JsonObject rateInfo = result.get("allowance").getAsJsonObject();
+    String cost = rateInfo.get("cost").getAsString();
+    String allowance = rateInfo.get("remaining").getAsString();
+    System.out.println("Cost: " + cost + " Allowance remaining: " + allowance);
+  }
+  
   public CandleStickSeries getCandlestick(String market, List<String> periods, long before, long after) {   
     List<String> paramParts = new ArrayList<String>();
     if (periods != null && periods.size() > 0) {
@@ -107,7 +115,12 @@ public class CryptoWatchApi {
     if (result == null) {
       return null;
     }
+
     JsonObject windows = result.get("result").getAsJsonObject();
+    
+    //INFO REGARDING RATE LIMITATIONS
+    printAPIRateLimitations(result);
+    
     Set<String> timePeriods = windows.keySet();
 
     CandleStickSeries candleStickSeries = new CandleStickSeries();
