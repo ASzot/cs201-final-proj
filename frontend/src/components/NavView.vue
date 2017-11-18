@@ -66,6 +66,8 @@
   import ContentView from '@/components/ContentView.vue'
   import register from '@/components/register.vue'
   import login from '@/components/login.vue'
+  import { GC_USER_ID, GC_AUTH_TOKEN } from '@/constants/settings'
+  
   export default {
     components: {
       ContentView, login, register
@@ -75,10 +77,11 @@
         localStorage.removeItem(GC_USER_ID)
         localStorage.removeItem(GC_AUTH_TOKEN)
         this.$root.$data.userId = localStorage.getItem(GC_USER_ID)
-      }
+      },  
     },
     data: () => ({
       drawer: true,
+      userAuthenticated: false,
       items: [
         { icon: 'trending_up', text: 'Most Popular' },
         { icon: 'subscriptions', text: 'Subscriptions' },
@@ -108,5 +111,19 @@
   }
   #content-space {
     margin-left: 300px;
+  }
+  .ml1:link{
+  	color: black !important; 
+  	text-decoration: none; 
+  	float: right; 
+  	padding: 5px; 
+  	font-size: 1.5em; 
+  	
+  }
+  .ml1:visited{
+  	color:black; 
+  }
+  .ml1:hover{
+  	color: white; 
   }
 </style>
