@@ -2,7 +2,6 @@ package com.cv;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.cv.cryptowatch.CryptoWatchApi;
 import com.cv.model.CandleStickSeries;
-import com.cv.model.TradeSeries;
+import com.cv.util.DateToUnix;
 
 @Controller
 public class ExchangeController {
@@ -32,22 +31,29 @@ public class ExchangeController {
     }
     return api;
   }
-
-
+  
+  //NOTE:
+  //periodStr is in terms of seconds: 86400 is one day (represents interval of time for candle data)
+  //begin and end can be taken in in date format: 10/27/1998 (MM/dd/YYYY)
+  //begin and end are in UNIX timestamp format (converter: https://www.epochconverter.com/)
+  //Assumes hour 0 of each day
   @CrossOrigin(origins="http://localhost:8080")
   @RequestMapping(value="/exchange/candle", method=RequestMethod.GET)
   public @ResponseBody CandleStickSeries getCandle(
       @RequestParam(value="fromCur", required=true) String fromCur,
       @RequestParam(value="toCur", required=true) String toCur,
       @RequestParam(value="period", required=false, defaultValue="") String periodStr,
-      @RequestParam(value="begin", required=false, defaultValue="-1") long begin,
-      @RequestParam(value="end", required=false, defaultValue="-1") long end) {
+      @RequestParam(value="begin", required=false, defaultValue="-1") String begin,
+      @RequestParam(value="end", required=false, defaultValue="-1") String end) {
 
     String marketTicket = fromCur + toCur;
 
+    long beginUnix = DateToUnix.convert(begin);
+    long endUnix = DateToUnix.convert(end);
+
     System.out.println("Got request");
     List<String> periods = Arrays.asList(periodStr.split(","));
-    CandleStickSeries candles = getApi().getCandlestick(marketTicket, periods, begin, end);
+    CandleStickSeries candles = getApi().getCandlestick(marketTicket, periods, beginUnix, endUnix);
     if (candles == null) {
       throw new IllegalStateException();
     }
