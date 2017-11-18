@@ -8,10 +8,23 @@
   import { GC_BACKEND } from '@/constants/settings.js'
 
   export default {
+    data () {
+      return {
+        lastTimestamp: -1,
+        dispData: null,
+        dispDates: null,
+        chartUpdateInterval: null,
+        waitingForUpdate: false,
+        useChart: null
+      }
+    },
+    props: ['shouldUpdateGraph'],
     methods: {
-      setChartOptions: function(data, dates) {
+      setChartOptions: function() {
         console.log("Setting chart options");
-        var myChart = echarts.init(document.getElementById('main'));
+        if (this.useChart == null) {
+          this.useChart = echarts.init(document.getElementById('main'));
+        }
         var option = {
           title: {
             text: 'Price chart',
@@ -24,7 +37,7 @@
           },
           xAxis: {
             type: 'category',
-            data: dates,
+            data: this.dispDates,
             scale: true,
             boundaryGap : false,
             axisLine: {onZero: false},
@@ -62,7 +75,7 @@
           series: [{
             type: 'candlestick',
             name: 'Prices',
-            data: data,
+            data: this.dispData,
             itemStyle: {
                 normal: {
                     color: '#FD1050',
@@ -75,8 +88,56 @@
         };
 
         console.log("Setting chart");
-        myChart.setOption(option);
+        this.useChart.setOption(option);
       },
+      updateChart: function() {
+        if (this.waitingForUpdate || !this.shouldUpdateGraph) {
+          return;
+        }
+
+        // Get the data from last data point until now. 
+        console.log("Calling update!!!");
+
+        var _this = this;
+        this.waitingForUpdate = true;
+        this.$http.get(GC_BACKEND + "/exchange/candle", {
+          params: {
+            fromCur: 'btc',
+            toCur: 'usd',
+            period: '60',
+            begin: _this.lastTimestamp
+          }
+        }, {}).then(response => {
+          var res = response.body;
+
+          var periods = res.periods;
+          var points = periods['60'].timeSeriesPoints;
+
+          var pointData = _this.getPointData(points);
+          var dateData = _this.getDateData(points);
+
+          _this.lastTimestamp = pointData[points.length - 1].timestamp;
+          _this.dispData = _this.dispData.concat(pointData);
+          _this.dispDates = _this.dispDates.concat(dateData);
+
+          _this.setChartOptions();
+          _this.waitingForUpdate = false;
+
+        }, response => {
+          console.log("Error!");
+        });
+      },
+      getDateData: function (points) {
+          return _.map(points, function (trade) {
+            return trade.dateStr;
+          });
+      },
+      getPointData: function (points) {
+          return _.map(points, function (trade) {
+            return [+trade.open, +trade.high, +trade.low, +trade.close];
+          });
+      },
+
       setChart: function() {
         console.log("Fetching data");
         var _ = this._;
@@ -91,31 +152,30 @@
             period: period
           }
         }, {}).then(response => {
-          console.log("Preparing to transform");
-          console.log(response);
           var res = response.body;
+
           var periods = res.periods;
           var points = periods[period].timeSeriesPoints;
-          //console.log(res);
-          var data = _.map(points, function (trade) {
-            return [+trade.open, +trade.high, +trade.low, +trade.close];
-          });
-          var dates = _.map(points, function (trade) {
-            return trade.dateStr;
-          });
 
-          console.log("Data transformed");
-          _this.setChartOptions(data, dates);
+          _this.lastTimestamp = points[points.length - 1].timestamp;
+          _this.dispData = _this.getPointData(points)
+          _this.dispDates = _this.getDateData(points);
 
+          _this.setChartOptions();
+
+          _this.chartUpdateInterval = setInterval(_this.updateChart, 5000);
         }, response => {
           console.log("failure");
           console.log(response);
         });
       }
     },
+    destroyed: function() {
+      clearInterval(this.chartUpdateInterval);
+    },
     mounted: function () {
       // Request chart data.
-      //setChart();
+      this.setChart();
     }
   }
 </script>

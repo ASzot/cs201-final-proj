@@ -1,11 +1,11 @@
-package GetData;
+package com.cv.jdbc.get;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import JDBCDriver.ConnectToDB;
+import com.cv.jdbc.ConnectToDB;
 
 public class GetCurrencyInformation {
 	

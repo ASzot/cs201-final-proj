@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.cv.model.CandleStickData;
+import com.cv.model.CandleStickPoint;
 import com.cv.model.CandleStickSeries;
 import com.cv.model.TimeSeries;
+import com.cv.model.TradeSeries;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -117,39 +118,14 @@ public class CryptoWatchApi {
     }
 
     JsonObject windows = result.get("result").getAsJsonObject();
-    
     //INFO REGARDING RATE LIMITATIONS
     printAPIRateLimitations(result);
     
-    Set<String> timePeriods = windows.keySet();
-
-    CandleStickSeries candleStickSeries = new CandleStickSeries();
-    for (String timePeriod : timePeriods) {
-      JsonArray dataPoints = windows.get(timePeriod).getAsJsonArray();
-
-      TimeSeries periodTimeSeries = new TimeSeries();
-      for (JsonElement dataPointEle : dataPoints) {
-        JsonArray dataPointObj = dataPointEle.getAsJsonArray();
-        
-        long timestamp = dataPointObj.get(0).getAsLong();
-        double open = dataPointObj.get(1).getAsDouble();
-        double high = dataPointObj.get(2).getAsDouble();
-        double low = dataPointObj.get(3).getAsDouble();
-        double close = dataPointObj.get(4).getAsDouble();
-        double volume = dataPointObj.get(5).getAsDouble();
-        
-        CandleStickData csd = new CandleStickData(timestamp, open, high, low, close, volume);
-        periodTimeSeries.addPoint(csd);
-      }
-
-      long timePeriodD = Long.parseLong(timePeriod);
-
-      candleStickSeries.addPeriod(timePeriodD, periodTimeSeries);
-    }
-
-    return candleStickSeries;
+    CandleStickSeries css = CandleStickSeries.fromJson(windows);
+    return css;
   }
 
+  
 //  public JsonObject getAggregateMarketData() {   
 //    String url = "https://api.cryptowat.ch/markets/prices";
 //    JsonObject result = executeCall(url);

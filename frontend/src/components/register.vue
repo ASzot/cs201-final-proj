@@ -27,7 +27,6 @@
 <script>
   import { GC_USER_ID, GC_AUTH_TOKEN } from '../constants/settings'
   export default {
-    name: 'register',
     data () {
       return {
         email: '',

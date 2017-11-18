@@ -54,7 +54,7 @@
       <v-container>
         <v-layout>
           <v-flex xs12 id="content-space">
-            <content-view></content-view>
+            <currency-view></currency-view>
           </v-flex>
         </v-layout>
       </v-container>
@@ -70,14 +70,19 @@
   
   export default {
     components: {
-      ContentView, login, register
+      CurrencyView
     },
     methods: {
     	  logout () {
         localStorage.removeItem(GC_USER_ID)
         localStorage.removeItem(GC_AUTH_TOKEN)
         this.$root.$data.userId = localStorage.getItem(GC_USER_ID)
-      },  
+      }  
+    },
+    computed: {
+        userId () {
+          return this.$root.$data.userId
+        }
     },
     data: () => ({
       drawer: true,

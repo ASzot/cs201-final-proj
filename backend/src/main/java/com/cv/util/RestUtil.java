@@ -36,6 +36,7 @@ public class RestUtil {
   }
   
   public JsonObject get(String endpoint) {
+    System.out.println("GET: " + endpoint);
     return makeRequest(endpoint, REQUEST_TYPE.GET);
   }
 
@@ -54,7 +55,9 @@ public class RestUtil {
 
       //Nihar -- added
       this.client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
+      System.out.println("Executing");
       HttpResponse response = client.execute(uriRequest);
+      System.out.println("Done executing");
       
       if (response.getStatusLine().getStatusCode() == 200) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
