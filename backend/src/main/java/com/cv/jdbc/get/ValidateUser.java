@@ -9,8 +9,6 @@ import com.cv.jdbc.ConnectToDB;
 
 public class ValidateUser {
 	
-	
-	
 	public ValidateUser(){
 		
 	}
