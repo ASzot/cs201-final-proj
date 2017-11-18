@@ -35,7 +35,7 @@ public class AddUser {
 				ps.setString(2, Password);
 				int result = ps.executeUpdate();
 				
-				if (result > 0) {  //Redundant code due to .isValidUSername() check, but worthwile to know about
+				if (result > 0) {  
 					added = true;
 				} else {
 					added=false;

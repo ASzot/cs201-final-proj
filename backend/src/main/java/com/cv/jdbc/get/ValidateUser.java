@@ -15,6 +15,51 @@ public class ValidateUser {
 		
 	}
 	
+	public int getUserID (String username) {
+		Connection conn = ConnectToDB.getDBConnection();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		int id = -1;
+		
+		if(isExistingUsername(username)) {
+			try {
+				
+				String getID = "SELECT * FROM User WHERE username=?";
+				
+				ps = conn.prepareStatement(getID);
+				ps.setString(2, username);
+				rs = ps.executeQuery();
+				
+				while(rs.next()) {
+					id = rs.getInt("userID");
+
+					return id;
+				}
+				
+			} catch(Exception e){
+				return id;
+			} finally {
+				try {
+					if (rs != null) {
+						rs.close();
+					}
+					if (ps != null) {
+						ps.close();
+					}
+					if (conn != null) {
+						conn.close();
+					}
+				} catch (SQLException sqle) {
+					System.out.println("sqle: " + sqle.getMessage());
+				}
+				
+			}
+		} 
+		
+		return id;
+	}
+	
 	public boolean isValidUserID(int userID) {
 		Connection conn = ConnectToDB.getDBConnection();
 		PreparedStatement ps = null;
