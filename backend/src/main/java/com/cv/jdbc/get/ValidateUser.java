@@ -13,7 +13,7 @@ public class ValidateUser {
 		
 	}
 	
-	public static boolean isValidUserID(int userID) {
+	public boolean isValidUserID(int userID) {
 		Connection conn = ConnectToDB.getDBConnection();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -60,7 +60,7 @@ public class ValidateUser {
 		
 	
 	
-	public static boolean isExistingUsername(String username) {
+	public boolean isExistingUsername(String username) {
 		Connection conn = ConnectToDB.getDBConnection();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -105,7 +105,7 @@ public class ValidateUser {
 	}
 	
 	
-	public static boolean validateUsernameAndPassword(String Username, String Password) {
+	public boolean validateUsernameAndPassword(String Username, String Password) {
 		Connection conn = ConnectToDB.getDBConnection();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
