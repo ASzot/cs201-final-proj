@@ -102,7 +102,7 @@ public class CryptoWatchApi {
       paramParts.add("after=" + after);
     }
 
-    String paramsStr = String.join(",", paramParts);
+    String paramsStr = String.join("&", paramParts);
     if (paramsStr.length() > 0) {
       paramsStr = "?" + paramsStr;
     }

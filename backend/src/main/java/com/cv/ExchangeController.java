@@ -34,8 +34,7 @@ public class ExchangeController {
   
   //NOTE:
   //periodStr is in terms of seconds: 86400 is one day (represents interval of time for candle data)
-  //begin and end can be taken in in date format: 10/27/1998 (MM/dd/YYYY)
-  //begin and end are in UNIX timestamp format (converter: https://www.epochconverter.com/)
+  //begin and end are in UNIX timestamp format (converter: //https://www.epochconverter.com/)
   //Assumes hour 0 of each day
   @CrossOrigin(origins="http://localhost:8080")
   @RequestMapping(value="/exchange/candle", method=RequestMethod.GET)
@@ -43,22 +42,18 @@ public class ExchangeController {
       @RequestParam(value="fromCur", required=true) String fromCur,
       @RequestParam(value="toCur", required=true) String toCur,
       @RequestParam(value="period", required=false, defaultValue="") String periodStr,
-      @RequestParam(value="begin", required=false, defaultValue="-1") String begin,
-      @RequestParam(value="end", required=false, defaultValue="-1") String end) {
+      @RequestParam(value="begin", required=false, defaultValue="-1") long begin,
+      @RequestParam(value="end", required=false, defaultValue="-1") long end) {
 
     String marketTicket = fromCur + toCur;
 
-    long beginUnix = DateToUnix.convert(begin);
-    long endUnix = DateToUnix.convert(end);
-
-    System.out.println("Got request");
     List<String> periods = Arrays.asList(periodStr.split(","));
-    CandleStickSeries candles = getApi().getCandlestick(marketTicket, periods, beginUnix, endUnix);
+    long before = end;
+    long after = begin;
+    CandleStickSeries candles = getApi().getCandlestick(marketTicket, periods, before, after);
     if (candles == null) {
       throw new IllegalStateException();
     }
-
-    System.out.println("Got response");
 
 	  return candles;
   }

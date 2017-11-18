@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import NavView from '@/components/NavView'
-import register from '@/components/register.vue'
-import login from '@/components/login.vue'
+import Register from '@/components/Register.vue'
+import Login from '@/components/Login.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -14,11 +14,11 @@ export default new Router({
     },
     {
         path: '/login',
-        component: login
+        component: Login
     },
     {
     	 	path: '/register',
-    	 	component: register
+    	 	component: Register
     }
   ]
 })

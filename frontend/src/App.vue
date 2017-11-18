@@ -7,14 +7,14 @@
 </template>
 
 <script>
-import register from '@/components/Register.vue'
-import login from '@/components/Login.vue'
+import Register from '@/components/Register.vue'
+import Login from '@/components/Login.vue'
 import { GC_USER_ID, GC_AUTH_TOKEN } from '@/constants/settings.js'
 
 export default {
   name: 'app',
   components: {
-      login, register
+      Login, Register
   },
   computed: {
       userId () {
