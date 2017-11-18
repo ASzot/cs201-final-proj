@@ -1,18 +1,17 @@
-package SetData;
+package com.cv.jdbc.set;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import GetData.ValidateUser;
-import JDBCDriver.ConnectToDB;
+import com.cv.jdbc.get.ValidateUser;
+import com.cv.jdbc.ConnectToDB;
 
 public class AddUser {
-	
 	PreparedStatement ps = null;
 	
-	public AddUser(){
+	public AddUser() {
 		
 	}
 	
@@ -24,7 +23,8 @@ public class AddUser {
 		if(checkUsername.isExistingUsername(Username)) {
 			added = false;
 			return added;
-		} else {
+		} 
+    else {
 			try {
 				String addUser = "INSERT INTO User" 
 												+"(username, hashed_password) VALUES"
@@ -40,13 +40,14 @@ public class AddUser {
 				} else {
 					added=false;
 				}
-				
-				
+
 				conn.commit();
-			} catch (SQLException sqle) {
+			} 
+      catch (SQLException sqle) {
 				System.out.println ("SQLException: " + sqle.getMessage());
 				added = false;
-			} finally {
+			} 
+      finally {
 				try {
 					if (ps != null) {
 						ps.close();
@@ -57,11 +58,8 @@ public class AddUser {
 				} catch (SQLException sqle) {
 					System.out.println("sqle: " + sqle.getMessage());
 				}
-				
 			}
 			return added;
 		}
-		
-		
 	}
 }

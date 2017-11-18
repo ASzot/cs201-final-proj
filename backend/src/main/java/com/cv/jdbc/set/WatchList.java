@@ -1,13 +1,13 @@
-package SetData;
+package com.cv.jdbc.set;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import GetData.GetCurrencyInformation;
-import GetData.ValidateUser;
-import JDBCDriver.ConnectToDB;
+import com.cv.jdbc.get.GetCurrencyInformation;
+import com.cv.jdbc.get.ValidateUser;
+import com.cv.jdbc.ConnectToDB;
 
 public class WatchList {
 	

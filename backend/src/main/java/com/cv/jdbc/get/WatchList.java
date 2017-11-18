@@ -1,4 +1,4 @@
-package GetData;
+package com.cv.jdbc.get;
 
 public class WatchList {
 	public WatchList(){
@@ -6,8 +6,6 @@ public class WatchList {
 	}
 	
 	public boolean isAlreadyInWatchList() {
-		
+		return false;
 	}
-	
-	
 }
