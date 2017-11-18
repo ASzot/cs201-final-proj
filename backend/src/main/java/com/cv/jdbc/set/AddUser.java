@@ -15,7 +15,7 @@ public class AddUser {
 		
 	}
 	
-	public static boolean addUser(String Username, String Password) {
+	public boolean addUser(String Username, String Password) {
 		Connection conn = ConnectToDB.getDBConnection();
 		boolean added = true;
 		ValidateUser checkUsername = new ValidateUser();
