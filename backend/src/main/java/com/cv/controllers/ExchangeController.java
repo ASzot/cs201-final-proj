@@ -1,4 +1,4 @@
-package com.cv.controllers;
+package com.cv;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,8 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.cv.ApiException;
+import com.cv.AppContext;
+import com.cv.cryptopia.CryptopiaApi;
 import com.cv.cryptowatch.CryptoWatchApi;
 import com.cv.model.CandleStickSeries;
+import com.cv.model.TradeSeries;
 import com.cv.util.DateToUnix;
 
 @Controller
@@ -23,18 +27,28 @@ public class ExchangeController {
   @Autowired
   private AppContext appContext;
 
-  private CryptoWatchApi api = null;
+  private CryptoWatchApi cryptoWatchApi = null;
+  private CryptopiaApi cryptopiaApi = null;
 
-  private CryptoWatchApi getApi() {
-    if (api == null) {
-      api = new CryptoWatchApi(appContext.getCwRest());
+  private CryptoWatchApi getCrypowatchApi() {
+    if (cryptoWatchApi == null) {
+      cryptoWatchApi = new CryptoWatchApi(appContext.getCwRest());
     }
-    return api;
+    return cryptoWatchApi;
+  }
+  
+
+  private CryptopiaApi getCryptopiaApi() {
+    if (cryptopiaApi == null) {
+      cryptopiaApi = new CryptopiaApi(appContext.getCryptopiaRest());
+    }
+    return cryptopiaApi;
   }
   
   //NOTE:
   //periodStr is in terms of seconds: 86400 is one day (represents interval of time for candle data)
-  //begin and end are in UNIX timestamp format (converter: //https://www.epochconverter.com/)
+  //begin and end can be taken in in date format: 10/27/1998 (MM/dd/YYYY)
+  //begin and end are in UNIX timestamp format (converter: https://www.epochconverter.com/)
   //Assumes hour 0 of each day
   @CrossOrigin(origins="http://localhost:8080")
   @RequestMapping(value="/exchange/candle", method=RequestMethod.GET)
@@ -42,20 +56,45 @@ public class ExchangeController {
       @RequestParam(value="fromCur", required=true) String fromCur,
       @RequestParam(value="toCur", required=true) String toCur,
       @RequestParam(value="period", required=false, defaultValue="") String periodStr,
-      @RequestParam(value="begin", required=false, defaultValue="-1") long begin,
-      @RequestParam(value="end", required=false, defaultValue="-1") long end) {
+      @RequestParam(value="begin", required=false, defaultValue="-1") String begin,
+      @RequestParam(value="end", required=false, defaultValue="-1") String end) {
 
     String marketTicket = fromCur + toCur;
 
+    long beginUnix = DateToUnix.convert(begin);
+    long endUnix = DateToUnix.convert(end);
+
+    System.out.println("Got request");
     List<String> periods = Arrays.asList(periodStr.split(","));
-    long before = end;
-    long after = begin;
-    CandleStickSeries candles = getApi().getCandlestick(marketTicket, periods, before, after);
+    CandleStickSeries candles = getCrypowatchApi().getCandlestick(marketTicket, periods, beginUnix, endUnix);
     if (candles == null) {
       throw new IllegalStateException();
     }
 
-	  return candles;
+    System.out.println("Got response");
+
+	return candles;
+  }
+  
+  
+  //access Trading historical 
+  @CrossOrigin(origins="http://localhost:8080")
+  @RequestMapping(value="/exchange/historicalData", method=RequestMethod.GET)
+  public @ResponseBody TradeSeries getHistoricalData(
+      @RequestParam(value="fromCur", required=true) String fromCur,
+      @RequestParam(value="toCur", required=true) String toCur) {
+
+    String marketTicket = fromCur + "_" + toCur;
+
+    System.out.println("Got request");
+    TradeSeries trades = getCryptopiaApi().getHistoricalData(marketTicket);
+    if (trades == null) {
+      throw new IllegalStateException();
+    }
+
+    System.out.println("Got response");
+
+    return trades;
   }
 
   @ExceptionHandler(ApiException.class)
