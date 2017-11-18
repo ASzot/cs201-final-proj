@@ -9,13 +9,11 @@ import com.cv.jdbc.ConnectToDB;
 
 public class ValidateUser {
 	
-	
-	
 	public ValidateUser(){
 		
 	}
 	
-	public boolean isValidUserID(int userID) {
+	public static boolean isValidUserID(int userID) {
 		Connection conn = ConnectToDB.getDBConnection();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -62,7 +60,7 @@ public class ValidateUser {
 		
 	
 	
-	public boolean isExistingUsername(String username) {
+	public static boolean isExistingUsername(String username) {
 		Connection conn = ConnectToDB.getDBConnection();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -107,7 +105,7 @@ public class ValidateUser {
 	}
 	
 	
-	public boolean validateUsernameAndPassword(String Username, String Password) {
+	public static boolean validateUsernameAndPassword(String Username, String Password) {
 		Connection conn = ConnectToDB.getDBConnection();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
