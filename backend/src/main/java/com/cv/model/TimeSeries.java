@@ -13,4 +13,20 @@ public class TimeSeries {
   public List<TimeSeriesPoint> getTimeSeriesPoints() {
     return timeSeriesPoints;
   }
+  
+  public Integer size() {
+    return timeSeriesPoints.size();
+  }
+  
+  public TimeSeriesPoint get(Integer i) {
+    return timeSeriesPoints.get(i);
+  }
+  
+  public void print() {
+    System.out.println("Moving Averages: ");
+    for (TimeSeriesPoint point : timeSeriesPoints) {
+      MovingAveragePoint map = (MovingAveragePoint) point;
+      System.out.println("Timestamp: " + point.getDateStr() + " Average: " + map.getAverage());
+    }
+  }
 }

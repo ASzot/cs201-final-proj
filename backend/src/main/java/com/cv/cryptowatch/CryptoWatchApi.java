@@ -2,12 +2,10 @@ package com.cv.cryptowatch;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import com.cv.model.CandleStickPoint;
 import com.cv.model.CandleStickSeries;
-import com.cv.model.TimeSeries;
-import com.cv.model.TradeSeries;
+import com.cv.model.CurrencyTicker;
+import com.cv.model.Market;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -85,6 +83,39 @@ public class CryptoWatchApi {
     String allowance = rateInfo.get("remaining").getAsString();
     System.out.println("Cost: " + cost + " Allowance remaining: " + allowance);
   }
+
+  public List<Market> getMarkets() {
+    String endpoint = "/markets";
+    JsonObject result = rest.get(endpoint);
+    if (result == null) {
+      return null;
+    }
+
+    JsonArray exchanges = result.get("result").getAsJsonArray();
+
+    List<Market> markets = new ArrayList<Market>();
+    for (JsonElement exchange : exchanges) {
+      JsonObject exchangeObj = exchange.getAsJsonObject();
+      boolean active = exchangeObj.get("active").getAsBoolean();
+      String exchangeStr = exchangeObj.get("exchange").getAsString();
+      String pair = exchangeObj.get("pair").getAsString();
+
+      if (!active) {
+        continue;
+      }
+
+      String fromStr = pair.substring(0, 3);
+      String toStr = pair.substring(3, 6);
+
+      CurrencyTicker from = new CurrencyTicker(-1, fromStr);
+      CurrencyTicker to = new CurrencyTicker(-1, toStr);
+
+      markets.add(new Market(from, to, exchangeStr));
+    }
+
+    printAPIRateLimitations(result);
+    return markets;
+  }
   
   public CandleStickSeries getCandlestick(String market, List<String> periods, long before, long after) {   
     List<String> paramParts = new ArrayList<String>();
@@ -103,7 +134,7 @@ public class CryptoWatchApi {
       paramParts.add("after=" + after);
     }
 
-    String paramsStr = String.join(",", paramParts);
+    String paramsStr = String.join("&", paramParts);
     if (paramsStr.length() > 0) {
       paramsStr = "?" + paramsStr;
     }
