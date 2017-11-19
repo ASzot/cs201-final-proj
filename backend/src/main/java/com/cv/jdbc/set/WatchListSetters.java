@@ -7,6 +7,9 @@ import java.sql.SQLException;
 
 import com.cv.jdbc.get.GetCurrencyInformation;
 import com.cv.jdbc.get.ValidateUser;
+
+import com.cv.jdbc.get.*;
+
 import com.cv.jdbc.ConnectToDB;
 
 public class WatchListSetters {
@@ -23,8 +26,10 @@ public class WatchListSetters {
 		boolean added = false;
 		ValidateUser validateUserID = new ValidateUser();
 		GetCurrencyInformation validateCurrencyID = new GetCurrencyInformation();
+		WatchListGetters myWatchListData = new WatchListGetters();
 		
-		if((validateUserID.isValidUserID(userID))&&(validateCurrencyID.isValidCurrencyID(currencyID))) {
+		
+		if((validateUserID.isValidUserID(userID))&&(validateCurrencyID.isValidCurrencyID(currencyID))&&(!myWatchListData.isAlreadyInWatchList(userID, currencyID))) {
 			try {
 				String insertStatement = "INSERT INTO UserWatchList" 
 														+"(userID, currencyID) VALUES"
