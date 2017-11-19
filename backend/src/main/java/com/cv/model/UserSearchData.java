@@ -1,13 +1,13 @@
 package com.cv.model;
 
-public class UserData {
+public class UserSearchData {
   private String username;
 
-  public UserData(String username) {
+  public UserSearchData(String username) {
     this.username = username;
   }
 
-  public UserData() {
+  public UserSearchData() {
     this("");
   }
 

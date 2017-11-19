@@ -110,7 +110,7 @@ public class ExchangeController {
       @RequestParam(value="toCur", required=true) String toCur) {
 
     System.out.println("Got request");
-    MovingAverage movingAverage = new MovingAverage(Constants.ONE_MONTH_UNIX, fromCur, toCur); //means only taking interval-day moving average for a single month
+    MovingAverage movingAverage = new MovingAverage(Constants.SIX_MONTHS_UNIX, fromCur, toCur); //means only taking interval-day moving average for a single month
     Map<Integer, TimeSeries> seriesMap = movingAverage.calculateSeries(interval);
     TimeSeries seriesArray = seriesMap.get(interval);
     System.out.println("TimeSeriesResponse: " + " size: " + seriesArray.size());

@@ -1,5 +1,7 @@
 package com.cv;
 
+import java.util.Vector;
+
 public class UserSearchResponse {
   private Vector<String> allUsers;
 
