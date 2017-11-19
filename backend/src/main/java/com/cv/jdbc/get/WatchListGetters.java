@@ -1,7 +1,7 @@
 package com.cv.jdbc.get;
 
-public class WatchList {
-	public WatchList(){
+public class WatchListGetters {
+	public WatchListGetters(){
 		
 	}
 	
