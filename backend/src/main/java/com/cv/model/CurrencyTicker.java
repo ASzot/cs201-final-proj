@@ -1,10 +1,10 @@
-package com.cv.jdbc.get;
+package com.cv.model;
 
-public class CurrencyID_Ticker {
+public class CurrencyTicker {
 	int ID;
 	String ticker;
 	
-	public CurrencyID_Ticker(int ID, String ticker){
+	public CurrencyTicker(int ID, String ticker){
 		this.ID = ID;
 		this.ticker = ticker;
 	}

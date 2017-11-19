@@ -1,7 +1,8 @@
 <template>
   <div>
+    <h3>{{ dispCur }}</h3>
     <v-checkbox label="Dynamically Update Chart?" @click="checkedUpdate"></v-checkbox>
-    <candle-stick-chart v-bind:shouldUpdateGraph="shouldUpdate"></candle-stick-chart>
+    <candle-stick-chart v-bind:shouldUpdateGraph="shouldUpdate" v-bind:dispCur="dispCur"></candle-stick-chart>
   </div>
 </template>
 
@@ -11,6 +12,9 @@
     components: {
       CandleStickChart
     },
+    props: [
+      'dispCur'
+    ],
     data () {
       return {
         shouldUpdate: false
@@ -18,7 +22,7 @@
     },
     methods: {
       checkedUpdate: function () {
-        this.shouldUpdate = ~this.shouldUpdate;
+        this.shouldUpdate = !this.shouldUpdate;
       }
     }
   }

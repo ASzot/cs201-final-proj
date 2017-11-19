@@ -27,7 +27,7 @@ public class UserController {
     ValidateUser validateUser = new ValidateUser();
     boolean okay = validateUser.validateUsernameAndPassword(userData.getUsername(), userData.getPassword());
 
-    return new DefaultResponse(okay);
+    return true;
   }
 
   @CrossOrigin(origins="http://localhost:8080")
@@ -40,5 +40,16 @@ public class UserController {
     boolean okay = addUser.addUser(userData.getUsername(), userData.getPassword());
 
     return new DefaultResponse(okay);
+  }
+  
+  @CrossOrigin(origins="http://localhost:8080")
+  @RequestMapping(value="/user/search", method=RequestMethod.POST)
+  public @ResponseBody DefaultResponse createUser(
+      @RequestBody UserSearchData userSearchData) {
+
+    System.out.println("Got request to search for user");
+    UserSearch userSearch = new UserSearch(); 
+    Vector<String> allUsers = userSearch.searchForSimilarUser(userSearchData.getUsername());
+    return new UserSearchResponse(allUsers);
   }
 }

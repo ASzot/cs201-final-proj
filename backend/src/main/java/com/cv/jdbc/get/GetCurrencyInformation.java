@@ -7,18 +7,19 @@ import java.sql.SQLException;
 import java.util.Vector;
 
 import com.cv.jdbc.ConnectToDB;
+import com.cv.model.CurrencyTicker;
 
 public class GetCurrencyInformation {
 	public GetCurrencyInformation(){
 		
 	}
 	
-	public Vector<CurrencyID_Ticker> getAllTickers(){
+	public Vector<CurrencyTicker> getAllTickers(){
 		Connection conn = ConnectToDB.getDBConnection();
 		
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		Vector<CurrencyID_Ticker> allTickersVector = new Vector<CurrencyID_Ticker>();
+		Vector<CurrencyTicker> allTickersVector = new Vector<CurrencyTicker>();
 	
 		try {
 			String Statement = "SELECT * FROM CurrencyInfo";
@@ -29,7 +30,7 @@ public class GetCurrencyInformation {
 			while(rs.next()) {
 				int ID = rs.getInt(1);
 				String ticker = rs.getString(2);
-				CurrencyID_Ticker temp = new CurrencyID_Ticker(ID, ticker);
+				CurrencyTicker temp = new CurrencyTicker(ID, ticker);
 				allTickersVector.add(temp);
 			}
 		} catch(Exception e){
