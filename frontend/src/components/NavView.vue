@@ -63,9 +63,6 @@
 </template>
 
 <script>
-  import ContentView from '@/components/ContentView.vue'
-  import register from '@/components/register.vue'
-  import login from '@/components/login.vue'
   import { GC_USER_ID, GC_AUTH_TOKEN } from '@/constants/settings'
   
   export default {
