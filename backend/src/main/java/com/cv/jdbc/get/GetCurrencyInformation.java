@@ -9,9 +9,6 @@ import java.util.Vector;
 import com.cv.jdbc.ConnectToDB;
 
 public class GetCurrencyInformation {
-	
-	
-	
 	public GetCurrencyInformation(){
 		
 	}
@@ -24,14 +21,10 @@ public class GetCurrencyInformation {
 		Vector<CurrencyID_Ticker> allTickersVector = new Vector<CurrencyID_Ticker>();
 	
 		try {
-			
-			
-			String Statement = "SELECT * FROM currencyID";
+			String Statement = "SELECT * FROM CurrencyInfo";
 			
 			ps = conn.prepareStatement(Statement);
 			rs = ps.executeQuery();
-			
-			
 			
 			while(rs.next()) {
 				int ID = rs.getInt(1);
@@ -39,8 +32,8 @@ public class GetCurrencyInformation {
 				CurrencyID_Ticker temp = new CurrencyID_Ticker(ID, ticker);
 				allTickersVector.add(temp);
 			}
-			
 		} catch(Exception e){
+      System.out.println(e.getMessage());
 			System.out.println("Exception Thrown");
 			return allTickersVector;
 		} finally {

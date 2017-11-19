@@ -11,31 +11,15 @@
       clipped
       enable-resize-watcher
       v-model="drawer" >
-      <v-list dense>
-        <v-list-tile v-for="item in items" :key="item.text">
-          <v-list-tile-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>
-              {{ item.text }}
-            </v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-subheader class="mt-3 grey--text text--darken-1">SUBSCRIPTIONS</v-subheader>
-        <v-list-tile class="mt-3">
-          <v-list-tile-action>
-            <v-icon class="grey--text text--darken-1">add_circle_outline</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-title class="grey--text text--darken-1">Browse Channels</v-list-tile-title>
-        </v-list-tile>
-        <v-list-tile>
-          <v-list-tile-action>
-            <v-icon class="grey--text text--darken-1">settings</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-title class="grey--text text--darken-1">Manage Subscriptions</v-list-tile-title>
-        </v-list-tile>
-      </v-list>
+      
+      <div v-if="navBarState == 'main'">
+        <side-bar-menu v-on:navToCurrency="navToCurrency"></side-bar-menu>
+      </div>
+      <div v-if="navBarState == 'currency'">
+        <v-btn block color="secondary" @click="navToMain" dark>Back</v-btn>
+        <currency-list-view></currency-list-view>
+      </div>
+
     </v-navigation-drawer>
     <v-toolbar class="blue">
       <v-toolbar-title>
@@ -63,21 +47,35 @@
 </template>
 
 <script>
-  import ContentView from '@/components/ContentView.vue'
-  import register from '@/components/register.vue'
-  import login from '@/components/login.vue'
+  import CurrencyView from '@/components/CurrencyView.vue'
+  import SideBarMenu from '@/components/SideBarMenu.vue'
+  import CurrencyListView from '@/components/CurrencyListView.vue'
   import { GC_USER_ID, GC_AUTH_TOKEN } from '@/constants/settings'
   
   export default {
     components: {
-      CurrencyView
+      CurrencyView, SideBarMenu, CurrencyListView
     },
     methods: {
-    	  logout () {
-        localStorage.removeItem(GC_USER_ID)
-        localStorage.removeItem(GC_AUTH_TOKEN)
-        this.$root.$data.userId = localStorage.getItem(GC_USER_ID)
-      }  
+      logout () {
+        localStorage.removeItem(GC_USER_ID);
+        localStorage.removeItem(GC_AUTH_TOKEN);
+        this.$root.$data.userId = localStorage.getItem(GC_USER_ID);
+      },
+      navToMain: function () {
+        this.navBarState = 'main';
+      },
+      navToCurrency: function() {
+        this.navBarState = 'currency';
+      },
+    },
+    created: function () {
+      this.$on("navToCurrency", this.navToCurrency);
+      this.$on("navToMain", this.navToMain);
+    },
+    beforeDestroy: function () {
+      this.$off('navToCurrency', this.navToCurrency);
+      this.$off("navToMain", this.navToMain);
     },
     computed: {
         userId () {
@@ -86,14 +84,7 @@
     },
     data: () => ({
       drawer: true,
-      userAuthenticated: false,
-      items: [
-        { icon: 'trending_up', text: 'Most Popular' },
-        { icon: 'subscriptions', text: 'Subscriptions' },
-        { icon: 'history', text: 'History' },
-        { icon: 'featured_play_list', text: 'Playlists' },
-        { icon: 'watch_later', text: 'Watch Later' }
-      ]
+      navBarState: 'main'
     }),
     watch: {
       drawer: function(val) {
