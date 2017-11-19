@@ -37,12 +37,21 @@ if __name__ == "__main__":
 	#print("day length candles, 1 year")
 	#get_endpoint("/exchange/candle?fromCur=btc&toCur=usd&period=86400&begin=11/17/2016&end=11/17/2017")
 
-    post_endpoint("/user/create", {
-            'username': 'andy',
-            'password': 'asdf'
-        })
+	#print("market data history")
+	#get_endpoint("/exchange/historicalData?fromCur=dot&toCur=btc")
+	
+    #post_endpoint("/user/create", {
+    #        'username': 'andy',
+    #        'password': 'asdf'
+    #    })
 
+	print("day length candles, 1 year")
+	get_endpoint("/exchange/candle?fromCur=btc&toCur=usd&period=86400&begin=1508198400&end=1510876800")
 
+	print("moving averages")
+	get_endpoint("/exchange/movingAverage?interval=30&fromCur=btc&toCur=usd")
+	
+	
 	    #get_endpoint("/exchange/data?fromCur=DOT&toCur=BTC&time=24")
 	#print("Minute candles, 4 hours, yesterday") OLD IMPLEMENTATION
 	#get_endpoint("/exchange/candle?fromCur=btc&toCur=usd&period=60&begin=1510934400&end=1510948800")
