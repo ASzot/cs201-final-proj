@@ -2,6 +2,7 @@ package com.cv.controllers;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Vector;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,8 @@ import com.cv.ApiException;
 import com.cv.AppContext;
 import com.cv.cryptopia.CryptopiaApi;
 import com.cv.cryptowatch.CryptoWatchApi;
+import com.cv.jdbc.get.CurrencyID_Ticker;
+import com.cv.jdbc.get.GetCurrencyInformation;
 import com.cv.model.CandleStickSeries;
 import com.cv.model.TradeSeries;
 
@@ -91,6 +94,15 @@ public class ExchangeController {
     System.out.println("Got response");
 
     return trades;
+  }
+
+  @CrossOrigin(origins="http://localhost:8080")
+  @RequestMapping(value="/exchange/all", method=RequestMethod.GET)
+  public @ResponseBody Vector<CurrencyID_Ticker> getAllTickets() {
+    System.out.println("Getting all currency tickers");
+    GetCurrencyInformation currencyInfo = new GetCurrencyInformation();
+
+    return currencyInfo.getAllTickers();
   }
 
   @ExceptionHandler(ApiException.class)
