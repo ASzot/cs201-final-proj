@@ -63,8 +63,8 @@
       },
       saveUserData () {
         localStorage.setItem(GC_LOGGED_IN, true);
-        localStorage.setItem(GC_USER_ID, id)
-        this.$root.$data.userId = localStorage.getItem(GC_USER_ID)
+        localStorage.setItem(GC_USER_ID, 0);
+        this.$root.$data.userId = localStorage.getItem(GC_USER_ID);
         //this.$root.$data.userId = -1;
       }
     }
