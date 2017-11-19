@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import NavView from '@/components/NavView'
 import Register from '@/components/Register.vue'
 import Login from '@/components/Login.vue'
+import UserSearch from '@/components/UserSearch.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -19,6 +20,10 @@ export default new Router({
     {
     	 	path: '/register',
     	 	component: Register
+    },
+    {
+    		path: '/UserSearch',
+    		component: UserSearch
     }
   ]
 })
