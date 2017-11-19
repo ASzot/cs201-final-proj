@@ -2,6 +2,7 @@ package com.cv.controllers;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,10 @@ import com.cv.cryptowatch.CryptoWatchApi;
 import com.cv.jdbc.get.CurrencyID_Ticker;
 import com.cv.jdbc.get.GetCurrencyInformation;
 import com.cv.model.CandleStickSeries;
+import com.cv.model.TimeSeries;
 import com.cv.model.TradeSeries;
+import com.cv.movingAverages.Constants;
+import com.cv.movingAverages.MovingAverage;
 
 @Controller
 public class ExchangeController {
@@ -65,7 +69,7 @@ public class ExchangeController {
 
     System.out.println("Got request");
     List<String> periods = Arrays.asList(periodStr.split(","));
-    CandleStickSeries candles = getCrypowatchApi().getCandlestick(marketTicket, periods, begin, end);
+    CandleStickSeries candles = getCrypowatchApi().getCandlestick(marketTicket, periods, end, begin);
     if (candles == null) {
       throw new IllegalStateException();
     }
@@ -94,6 +98,25 @@ public class ExchangeController {
     System.out.println("Got response");
 
     return trades;
+  }
+  
+  //print Moving Average Data
+  @CrossOrigin(origins="http://localhost:8080")
+  @RequestMapping(value="/exchange/movingAverage", method=RequestMethod.GET)
+  public @ResponseBody TimeSeries getMovingAverage(
+      @RequestParam(value="interval",required=true) Integer interval,
+      @RequestParam(value="fromCur", required=true) String fromCur,
+      @RequestParam(value="toCur", required=true) String toCur) {
+
+    System.out.println("Got request");
+    MovingAverage movingAverage = new MovingAverage(Constants.ONE_MONTH_UNIX, fromCur, toCur); //means only taking interval-day moving average for a single month
+    Map<Integer, TimeSeries> seriesMap = movingAverage.calculateSeries(interval);
+    TimeSeries seriesArray = seriesMap.get(interval);
+    System.out.println("TimeSeriesResponse: " + " size: " + seriesArray.size());
+    seriesArray.print();
+
+    System.out.println("Got response");
+    return seriesArray;
   }
 
   @CrossOrigin(origins="http://localhost:8080")
