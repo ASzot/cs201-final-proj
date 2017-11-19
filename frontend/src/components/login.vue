@@ -9,9 +9,7 @@
 		
 		    <label><b>Password</b></label>
 		    <input type="password" placeholder="Enter Password" v-model="pass" required>
-            
-            <button type="submit">Login</button>
-            
+                        
              <div class="clearfix">
 		      <a href = "/"><button type="button" class="cancelbtn">Cancel</button></a>
 		      <button type="submit" @click="onLogin" class="signupbtn">Login</button>
@@ -27,7 +25,9 @@
 </template>
 
 <script>
-  import { GC_LOGGED_IN, GC_BACKEND } from '@/constants/settings'
+  import { GC_USER_ID, GC_LOGGED_IN, GC_BACKEND } from '@/constants/settings'
+  import Router from 'vue-router'
+  
   export default {
     data () {
       return {
@@ -38,6 +38,7 @@
     },
     methods: {
       onLogin: function () {
+      	console.log("testing error");
         var _this = this;
         this.$http.post(GC_BACKEND + "/user/login", {
           params: {
@@ -55,7 +56,7 @@
             _this.saveUserData();
             console.log("Logged in!");
             // Go back to home page.
-            router.push('/');
+            Router.push('/');
           }
 
         }, response => {
@@ -64,8 +65,8 @@
       },
       saveUserData () {
         localStorage.setItem(GC_LOGGED_IN, true);
-        localStorage.setItem(GC_USER_ID, id)
-        this.$root.$data.userId = localStorage.getItem(GC_USER_ID)
+        localStorage.setItem(GC_USER_ID, 0);
+        this.$root.$data.userId = localStorage.getItem(GC_USER_ID);
         //this.$root.$data.userId = -1;
       }
     }
