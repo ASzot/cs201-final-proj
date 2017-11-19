@@ -9,12 +9,12 @@ import com.cv.jdbc.get.GetCurrencyInformation;
 import com.cv.jdbc.get.ValidateUser;
 import com.cv.jdbc.ConnectToDB;
 
-public class WatchList {
+public class WatchListSetters {
 	
 	PreparedStatement ps = null;
 	ResultSet rs = null;
 	
-	public WatchList(){
+	public WatchListSetters(){
 		
 	}
 	
