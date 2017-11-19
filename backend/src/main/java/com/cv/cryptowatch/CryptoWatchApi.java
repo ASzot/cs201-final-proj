@@ -6,6 +6,8 @@ import java.util.List;
 import com.cv.model.CandleStickSeries;
 import com.cv.model.CurrencyTicker;
 import com.cv.model.Market;
+import com.cv.model.MarketSummary;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -16,65 +18,6 @@ public class CryptoWatchApi {
   public CryptoWatchApi(CryptoWatchRest rest) {
     this.rest = rest;
   }
-
-  ///**
-  // * Method to return all supported exchanges
-  // * @return JsonObject containing the supported exchanges
-  // */
-  //public JsonObject getExchanges() {   
-  //  String url = "https://api.cryptowat.ch/assets";
-
-  //  JsonObject result = executeCall(url);
-  //  return result;
-  //}
-
-  ///**
-  // * Method to return all supported markets and accompanying URL for market data
-  // * @return JsonObject containing the supported exchanges
-  // */
-  //public JsonObject getMarkets() {   
-  //  String url = "https://api.cryptowat.ch/markets";
-  //  JsonObject result = executeCall(url);
-  //  return result;
-  //}
-
-
-  //Markets: ltcusd, btcusd, ltcbtc
-  //public JsonObject getMarketDataURLs(String market) {   
-  //  String url = "https://api.cryptowat.ch/markets/gdax/" + market;
-  //  JsonObject result = executeCall(url);
-  //  return result;
-  //}
-
-  ////Markets: ltcusd, btcusd, ltcbtc
-  //public JsonObject getLastPrice(String market) {   
-  //  String url = "https://api.cryptowat.ch/markets/gdax/" + market + "/price";
-  //  JsonObject result = executeCall(url);
-  //  return result;
-  //}
-
-  ////Markets: ltcusd, btcusd, ltcbtc
-  //public JsonObject getCurrencySummary(String market) {   
-  //  String url = "https://api.cryptowat.ch/markets/gdax/" + market + "/summary";
-
-  //  JsonObject result = executeCall(url);
-  //  return result;
-  //}
-
-  //public JsonObject getTrades(String market, int limitTrades) {   
-  //  String url = "https://api.cryptowat.ch/markets/gdax/" + market + "/trades";
-  //  String params = "?limit=" + limitTrades;
-  //  url += params;
-
-  //  JsonObject result = executeCall(url);
-  //  return result;
-  //}
-
-  //public JsonObject getOrders(String market) {   
-  //  String url = "https://api.cryptowat.ch/markets/gdax/" + market + "/orderbook";
-  //  JsonObject result = executeCall(url);
-  //  return result;
-  //}
 
   //print information regarding remaining time before API rate limitation
   private void printAPIRateLimitations(JsonObject result) {
@@ -104,6 +47,10 @@ public class CryptoWatchApi {
         continue;
       }
 
+      if (pair.length() != 6) {
+        continue;
+      }
+
       String fromStr = pair.substring(0, 3);
       String toStr = pair.substring(3, 6);
 
@@ -117,7 +64,7 @@ public class CryptoWatchApi {
     return markets;
   }
   
-  public CandleStickSeries getCandlestick(String market, List<String> periods, long before, long after) {   
+  public CandleStickSeries getCandlestick(String market, String exchange, List<String> periods, long before, long after) {   
     List<String> paramParts = new ArrayList<String>();
     if (periods != null && periods.size() > 0) {
       String periodsStr = String.join(",", periods);
@@ -139,7 +86,7 @@ public class CryptoWatchApi {
       paramsStr = "?" + paramsStr;
     }
 
-    String endpoint = "/markets/gdax/" + market + "/ohlc" + paramsStr;
+    String endpoint = "/markets/" + exchange + "/" + market + "/ohlc" + paramsStr;
     System.out.println("Endpoint is");
     System.out.println(endpoint);
 
@@ -156,18 +103,11 @@ public class CryptoWatchApi {
     return css;
   }
 
-  
-//  public JsonObject getAggregateMarketData() {   
-//    String url = "https://api.cryptowat.ch/markets/prices";
-//    JsonObject result = executeCall(url);
-//    return result;
-//  }
-//
-//  public JsonObject getAggregateMarketSummaries() {   
-//    String url = "https://api.cryptowat.ch/markets/summaries";
-//
-//    JsonObject result = executeCall(url);
-//    return result;
-//  }
-
+  public MarketSummary getMarketSummary(String fromCur, String toCur, String exchange, Gson gson) {
+    String endpoint = "/markets/" + exchange + "/" + fromCur + toCur + "/summary";
+    JsonObject result = rest.get(endpoint);
+    String jsonStr = result.get("result").getAsJsonObject().toString();
+    System.out.println("Json string " + jsonStr);
+    return gson.fromJson(jsonStr, MarketSummary.class);
+  }
 }

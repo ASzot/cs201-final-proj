@@ -123,7 +123,9 @@ public class MovingAverage {
   private Double calculateInitialSum(long startInterval, long endInterval, Map<Long, Double> prices) {
     System.out.println("Checkpoint5");
 
-    CandleStickSeries candles = getCrypowatchApi().getCandlestick(market, dayPeriod, endInterval, startInterval);
+    //TODO:
+    // Pass in exchange as parameter.
+    CandleStickSeries candles = getCrypowatchApi().getCandlestick(market, "gdax", dayPeriod, endInterval, startInterval);
     if (candles.getPeriods().size() > 1) {
       System.out.println("ERROR WITH API Call");
       return null;
@@ -167,7 +169,9 @@ public class MovingAverage {
     long begin = timestamp;
     long end = timestamp + Constants.DAY_UNIX;    
     
-    CandleStickSeries candles = getCrypowatchApi().getCandlestick(market, dayPeriod, end, begin);
+    //TODO:
+    // Pass in exchange name
+    CandleStickSeries candles = getCrypowatchApi().getCandlestick(market, "gdax", dayPeriod, end, begin);
     if (candles == null || candles.getPeriods().size() > 1 || candles.getPeriods().get(Constants.DAY_UNIX).size() > 1) {
       System.out.println("EMPTY RESPONSE OR TOO MANY RESPONSE FOR CANDLESTICK GET PRICE IN MOV AVG");
       return null;

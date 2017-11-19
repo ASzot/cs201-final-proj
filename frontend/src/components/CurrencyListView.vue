@@ -2,9 +2,9 @@
   <div class='curr-list-container'>
     <v-text-field v-model="searchText" v-on:keyup="onSearchChange" label="Search"></v-text-field>
     <v-list dense>
-      <v-list-tile-content v-for="ticker in filteredTickers" :key="ticker.ticker" >
+      <v-list-tile-content v-for="ticker in filteredTickers" :key="ticker" >
         <v-list-tile-title class='center-currency' @click="onOptionSelected">
-          {{ ticker.ticker }}
+          {{ ticker }}
         </v-list-tile-title>
       </v-list-tile-content>
     </v-list>
@@ -28,11 +28,11 @@
         this.$emit("changeDispCur", selectedTicker);
       },
       onSearchChange: function () {
-        var searchText = this.searchText.toUpperCase();
+        var searchText = this.searchText.toLowerCase();
 
         if (searchText != "") {
           this.filteredTickers = this._.filter(this.tickers, function (t) {
-            return t.ticker.indexOf(searchText) !== -1;
+            return t.indexOf(searchText) !== -1;
           });
         }
         else {
@@ -42,11 +42,21 @@
     },
     mounted: function () {
       var _this = this;
-      this.$http.get(GC_BACKEND + "/exchange/all", {
+      var _ = this._;
+      this.$http.get(GC_BACKEND + "/exchange/markets", {
+        params: {
+          allowedTos: "usd,usdt"
+        }
       }, {}).then(response => {
         var res = response.body;
+        // Get the from tickers
+        var fromTickers = _.map(res, function (m) {
+          return m.fromCur.ticker;
+        });
 
-        _this.tickers = res;
+        var uniqTickers = _.uniq(fromTickers);
+
+        _this.tickers = uniqTickers;
         // To set the filtered tickers list
         _this.onSearchChange();
       }, response => {

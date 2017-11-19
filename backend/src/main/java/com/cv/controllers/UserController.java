@@ -1,5 +1,7 @@
 package com.cv.controllers;
 
+import java.util.Vector;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -10,9 +12,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cv.AppContext;
 import com.cv.DefaultResponse;
+import com.cv.UserSearchResponse;
+import com.cv.jdbc.get.UserSearch;
 import com.cv.jdbc.get.ValidateUser;
 import com.cv.jdbc.set.AddUser;
 import com.cv.model.UserData;
+import com.cv.model.UserSearchData;
 
 @Controller
 public class UserController {
@@ -27,7 +32,7 @@ public class UserController {
     ValidateUser validateUser = new ValidateUser();
     boolean okay = validateUser.validateUsernameAndPassword(userData.getUsername(), userData.getPassword());
 
-    return true;
+    return new DefaultResponse(okay);
   }
 
   @CrossOrigin(origins="http://localhost:8080")
@@ -44,7 +49,7 @@ public class UserController {
   
   @CrossOrigin(origins="http://localhost:8080")
   @RequestMapping(value="/user/search", method=RequestMethod.POST)
-  public @ResponseBody DefaultResponse createUser(
+  public @ResponseBody UserSearchResponse createUser(
       @RequestBody UserSearchData userSearchData) {
 
     System.out.println("Got request to search for user");

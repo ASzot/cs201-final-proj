@@ -22,9 +22,10 @@ import com.cv.cryptopia.CryptopiaApi;
 import com.cv.cryptowatch.CryptoWatchApi;
 import com.cv.jdbc.get.GetCurrencyInformation;
 import com.cv.model.CandleStickSeries;
-import com.cv.model.TimeSeries;
 import com.cv.model.CurrencyTicker;
 import com.cv.model.Market;
+import com.cv.model.MarketSummary;
+import com.cv.model.TimeSeries;
 import com.cv.model.TradeSeries;
 import com.cv.movingAverages.Constants;
 import com.cv.movingAverages.MovingAverage;
@@ -62,6 +63,7 @@ public class ExchangeController {
   public @ResponseBody CandleStickSeries getCandle(
       @RequestParam(value="fromCur", required=true) String fromCur,
       @RequestParam(value="toCur", required=true) String toCur,
+      @RequestParam(value="exchange", required=true) String exchange,
       @RequestParam(value="period", required=false, defaultValue="") String periodStr,
       @RequestParam(value="begin", required=false, defaultValue="-1") long begin,
       @RequestParam(value="end", required=false, defaultValue="-1") long end) {
@@ -70,7 +72,7 @@ public class ExchangeController {
 
     System.out.println("Got request");
     List<String> periods = Arrays.asList(periodStr.split(","));
-    CandleStickSeries candles = getCrypowatchApi().getCandlestick(marketTicket, periods, end, begin);
+    CandleStickSeries candles = getCrypowatchApi().getCandlestick(marketTicket, exchange, periods, end, begin);
     if (candles == null) {
       throw new IllegalStateException();
     }
@@ -130,7 +132,7 @@ public class ExchangeController {
   }
 
   @CrossOrigin(origins="http://localhost:8080")
-  @RequestMapping(value="/exchanges", method=RequestMethod.GET)
+  @RequestMapping(value="/exchange/markets", method=RequestMethod.GET)
   public @ResponseBody List<Market> getMarkets(@RequestParam(value="allowedTos", required=true) String tosAllowedStr) {
     List<Market> markets = getCrypowatchApi().getMarkets();
     if (markets == null) {
@@ -140,6 +142,16 @@ public class ExchangeController {
     List<String> allowedTos = Arrays.asList(tosAllowedStr.split(","));
 
     return Market.filter(markets, allowedTos);
+  }
+
+  @CrossOrigin(origins="http://localhost:8080")
+  @RequestMapping(value="/exchange/summary", method=RequestMethod.GET)
+  public @ResponseBody MarketSummary getMarketSummary(
+      @RequestParam(value="fromCur", required=true) String fromCur,
+      @RequestParam(value="toCur", required=true) String toCur,
+      @RequestParam(value="exchange", required=true) String exchange) {
+
+    return getCrypowatchApi().getMarketSummary(fromCur, toCur, exchange, appContext.getGson());
   }
 
   @ExceptionHandler(ApiException.class)
