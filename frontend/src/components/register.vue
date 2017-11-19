@@ -1,9 +1,9 @@
 <template>
 <div>
-<h2>Signup Form</h2>
+<h2 style = "text-align:center; margin-top: 3%;">Signup Form</h2>
 
-<form style="border:1px solid #ccc">
-  <div class="container">
+<form>
+  <div class="container" style = "text-align:center; margin-top: 3%;">
     <label><b>Username</b></label>
     <input type="text" placeholder="Enter Username" v-model="username" required>
 
@@ -13,9 +13,9 @@
     <label><b>Repeat Password</b></label>
     <input type="password" placeholder="Repeat Password" v-model="passRepeat" required>
 
-    <div class="clearfix">
-      <a href = "/"><button type="button" class="cancelbtn">Cancel</button></a>
-      <button type="submit" @click="onSignup" class="signupbtn">Sign Up</button>
+    <div class="clearfix" style = "padding: 30px;">
+      <a href = "/"><button type="button" class="cancelbtn" style = "padding: 10px;">Cancel</button></a>
+      <button type="submit" @click="onSignup" class="signupbtn" style = "padding: 10px;">Sign Up</button>
     </div>
 
     <div>

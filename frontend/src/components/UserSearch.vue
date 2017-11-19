@@ -2,7 +2,7 @@
 <div>
 <h2>Search For Users</h2>
 
-<form style="border:1px solid #ccc">
+<form>
   <div class="container">
     <label><b>Username</b></label>
     <input type="text" placeholder="Search For Username" v-model="username" required>
