@@ -32,7 +32,7 @@ public class UserController {
     ValidateUser validateUser = new ValidateUser();
     boolean okay = validateUser.validateUsernameAndPassword(userData.getUsername(), userData.getPassword());
 
-    return true;
+    return new DefaultResponse(okay);
   }
 
   @CrossOrigin(origins="http://localhost:8080")
