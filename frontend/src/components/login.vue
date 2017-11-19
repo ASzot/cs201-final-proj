@@ -26,7 +26,6 @@
 
 <script>
   import { GC_USER_ID, GC_LOGGED_IN, GC_BACKEND } from '@/constants/settings'
-  import Router from 'vue-router'
   
   export default {
     data () {
@@ -38,7 +37,6 @@
     },
     methods: {
       onLogin: function () {
-      	console.log("testing error");
         var _this = this;
         this.$http.post(GC_BACKEND + "/user/login", {
           params: {
@@ -56,7 +54,7 @@
             _this.saveUserData();
             console.log("Logged in!");
             // Go back to home page.
-            Router.push('/');
+            this.$router.push('/');
           }
 
         }, response => {
