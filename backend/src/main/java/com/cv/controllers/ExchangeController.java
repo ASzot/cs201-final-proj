@@ -20,7 +20,6 @@ import com.cv.cryptopia.CryptopiaApi;
 import com.cv.cryptowatch.CryptoWatchApi;
 import com.cv.model.CandleStickSeries;
 import com.cv.model.TradeSeries;
-import com.cv.util.DateToUnix;
 
 @Controller
 public class ExchangeController {
