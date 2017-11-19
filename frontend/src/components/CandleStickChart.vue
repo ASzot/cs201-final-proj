@@ -18,7 +18,7 @@
         useChart: null
       }
     },
-    props: ['shouldUpdateGraph'],
+    props: ['shouldUpdateGraph', 'dispCur'],
     methods: {
       setChartOptions: function() {
         console.log("Setting chart options");
@@ -102,7 +102,7 @@
         this.waitingForUpdate = true;
         this.$http.get(GC_BACKEND + "/exchange/candle", {
           params: {
-            fromCur: 'btc',
+            fromCur: _this.dispCur,
             toCur: 'usd',
             period: '60',
             begin: _this.lastTimestamp
@@ -137,7 +137,6 @@
             return [+trade.open, +trade.high, +trade.low, +trade.close];
           });
       },
-
       setChart: function() {
         console.log("Fetching data");
         var _ = this._;
@@ -147,7 +146,7 @@
         var period = "60";
         this.$http.get(GC_BACKEND + "/exchange/candle", {
           params: {
-            fromCur: 'btc',
+            fromCur: this.dispCur,
             toCur: 'usd',
             period: period
           }
@@ -163,11 +162,22 @@
 
           _this.setChartOptions();
 
+          if (_this.chartUpdateInterval != null) {
+            clearInterval(this.chartUpdateInterval);
+            _this.chartUpdateInterval = null;
+          }
+
           _this.chartUpdateInterval = setInterval(_this.updateChart, 5000);
         }, response => {
           console.log("failure");
           console.log(response);
         });
+      }
+    },
+    watch: {
+      dispCur: function(oldVal, newVal) {
+        console.log("Redrawing chart for currency " + this.dispCur);
+        this.setChart();
       }
     },
     destroyed: function() {

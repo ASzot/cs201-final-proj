@@ -17,7 +17,7 @@
       </div>
       <div v-if="navBarState == 'currency'">
         <v-btn block color="secondary" @click="navToMain" dark>Back</v-btn>
-        <currency-list-view></currency-list-view>
+        <currency-list-view v-on:changeDispCur="changeDispCur"></currency-list-view>
       </div>
 
     </v-navigation-drawer>
@@ -38,7 +38,7 @@
       <v-container>
         <v-layout>
           <v-flex xs12 id="content-space">
-            <currency-view></currency-view>
+            <currency-view v-bind:dispCur="dispCur"></currency-view>
           </v-flex>
         </v-layout>
       </v-container>
@@ -68,6 +68,11 @@
       navToCurrency: function() {
         this.navBarState = 'currency';
       },
+      changeDispCur: function(dispCur) {
+        console.log("Wanting to change display currency to: ");
+        console.log(dispCur);
+        this.dispCur = dispCur;
+      },
     },
     created: function () {
       this.$on("navToCurrency", this.navToCurrency);
@@ -84,11 +89,11 @@
     },
     data: () => ({
       drawer: true,
-      navBarState: 'main'
+      navBarState: 'main',
+      dispCur: 'btc'
     }),
     watch: {
       drawer: function(val) {
-        console.log("Drawer changed!");
         if (val) {
           document.getElementById("content-space").style.marginLeft = "300px";
         }

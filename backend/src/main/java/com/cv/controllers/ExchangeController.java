@@ -19,9 +19,10 @@ import com.cv.ApiException;
 import com.cv.AppContext;
 import com.cv.cryptopia.CryptopiaApi;
 import com.cv.cryptowatch.CryptoWatchApi;
-import com.cv.jdbc.get.CurrencyID_Ticker;
 import com.cv.jdbc.get.GetCurrencyInformation;
 import com.cv.model.CandleStickSeries;
+import com.cv.model.CurrencyTicker;
+import com.cv.model.Market;
 import com.cv.model.TradeSeries;
 
 @Controller
@@ -98,11 +99,24 @@ public class ExchangeController {
 
   @CrossOrigin(origins="http://localhost:8080")
   @RequestMapping(value="/exchange/all", method=RequestMethod.GET)
-  public @ResponseBody Vector<CurrencyID_Ticker> getAllTickets() {
+  public @ResponseBody Vector<CurrencyTicker> getAllTickets() {
     System.out.println("Getting all currency tickers");
     GetCurrencyInformation currencyInfo = new GetCurrencyInformation();
 
     return currencyInfo.getAllTickers();
+  }
+
+  @CrossOrigin(origins="http://localhost:8080")
+  @RequestMapping(value="/exchanges", method=RequestMethod.GET)
+  public @ResponseBody List<Market> getMarkets(@RequestParam(value="allowedTos", required=true) String tosAllowedStr) {
+    List<Market> markets = getCrypowatchApi().getMarkets();
+    if (markets == null) {
+      throw new IllegalStateException();
+    }
+
+    List<String> allowedTos = Arrays.asList(tosAllowedStr.split(","));
+
+    return Market.filter(markets, allowedTos);
   }
 
   @ExceptionHandler(ApiException.class)
