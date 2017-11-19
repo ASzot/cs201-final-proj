@@ -17,7 +17,7 @@
       </div>
       <div v-if="navBarState == 'currency'">
         <v-btn block color="secondary" @click="navToMain" dark>Back</v-btn>
-        <p>Currency View!</p>
+        <currency-list-view></currency-list-view>
       </div>
 
     </v-navigation-drawer>
@@ -49,11 +49,12 @@
 <script>
   import CurrencyView from '@/components/CurrencyView.vue'
   import SideBarMenu from '@/components/SideBarMenu.vue'
+  import CurrencyListView from '@/components/CurrencyListView.vue'
   import { GC_USER_ID, GC_AUTH_TOKEN } from '@/constants/settings'
   
   export default {
     components: {
-      CurrencyView, SideBarMenu
+      CurrencyView, SideBarMenu, CurrencyListView
     },
     methods: {
       logout () {
