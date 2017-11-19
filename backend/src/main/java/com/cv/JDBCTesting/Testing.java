@@ -3,7 +3,7 @@ package com.cv.JDBCTesting;
 import com.cv.jdbc.*;
 import com.cv.jdbc.get.GetCurrencyInformation;
 import com.cv.jdbc.get.ValidateUser;
-import com.cv.jdbc.set.WatchList;
+import com.cv.jdbc.set.WatchListSetters;
 import com.cv.jdbc.set.AddUser;
 
 
@@ -26,7 +26,7 @@ public class Testing {
 		System.out.println("Is Valid CurrencyID? "+gcIDft.isValidCurrencyID(1));
 		System.out.println("Is Valid CurrencyID? "+gcIDft.isValidCurrencyID(0));
 		
-		WatchList wl = new WatchList();
+		WatchListSetters wl = new WatchListSetters();
 		wl.addToWatchList(1, 101);
 	
 	}
