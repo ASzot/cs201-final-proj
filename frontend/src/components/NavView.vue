@@ -63,6 +63,7 @@
 </template>
 
 <script>
+  import CurrencyView from '@/components/CurrencyView.vue'
   import { GC_USER_ID, GC_AUTH_TOKEN } from '@/constants/settings'
   
   export default {
