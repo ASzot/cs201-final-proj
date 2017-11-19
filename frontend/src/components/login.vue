@@ -5,18 +5,21 @@
         <form>                  
           <div class="container">
             <label><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" name="uname" required>
-        
-            <label><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="psw" required>
-                
+		    <input type="text" placeholder="Enter Username" v-model="username" required>
+		
+		    <label><b>Password</b></label>
+		    <input type="password" placeholder="Enter Password" v-model="pass" required>
+            
             <button type="submit">Login</button>
-            <input type="checkbox" checked="checked"> Remember me
-          </div>
-        
-          <div class="container" style="background-color:#f1f1f1">
-            <a href = "/"><button type="button" class="cancelbtn">Cancel</button></a>
-            <span class="psw">Forgot <a href="#">password?</a></span>
+            
+             <div class="clearfix">
+		      <a href = "/"><button type="button" class="cancelbtn">Cancel</button></a>
+		      <button type="submit" @click="onLogin" class="signupbtn">Login</button>
+		    </div>
+		
+		    <div>
+		      <p>{{ errorMsg }}</p>
+		    </div>
           </div>
         </form>
         
@@ -24,24 +27,46 @@
 </template>
 
 <script>
-  import { GC_USER_ID, GC_AUTH_TOKEN } from '../constants/settings'
+  import { GC_LOGGED_IN, GC_BACKEND } from '@/constants/settings'
   export default {
     data () {
       return {
-        email: '',
-        login: true,
-        name: '',
-        password: ''
+        username: "",
+        pass: "",
+        errorMsg: ""
       }
     },
     methods: {
-      confirm () {
-        //implement; once login is confirmed, save user tokens
+      onLogin: function () {
+        var _this = this;
+        this.$http.post(GC_BACKEND + "/user/login", {
+          params: {
+            username: _this.username,
+            password: _this.password
+          }
+        }, {}).then(response => {
+          var res = response.body;
+          console.log("Got response");
+          if (!res.okay) {
+            _this.errorMsg = "Could not log in!";
+          }
+          else {
+            console.log("Loggin in...?");
+            _this.saveUserData();
+            console.log("Logged in!");
+            // Go back to home page.
+            router.push('/');
+          }
+
+        }, response => {
+          console.log("Error!");
+        });
       },
-      saveUserData (id, token) {
+      saveUserData () {
+        localStorage.setItem(GC_LOGGED_IN, true);
         localStorage.setItem(GC_USER_ID, id)
-        localStorage.setItem(GC_AUTH_TOKEN, token)
         this.$root.$data.userId = localStorage.getItem(GC_USER_ID)
+        //this.$root.$data.userId = -1;
       }
     }
   }
