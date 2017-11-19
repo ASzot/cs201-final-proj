@@ -21,37 +21,36 @@ public class UserSearch {
 		
 		Vector<String> similarUsers = new Vector<String>();
 		
-		
-			try {
+		try {
+			
+			String findSimilarUser = "SELECT * FROM User WHERE username like ?";
 				
-				String findSimilarUser = "SELECT * FROM User WHERE username like ?";
+			ps = conn.prepareStatement(findSimilarUser);
+			ps.setString(1, "%" + name + "%");
+			rs = ps.executeQuery();
 				
-				ps = conn.prepareStatement(findSimilarUser);
-				ps.setString(1, "%" + name + "%");
-				rs = ps.executeQuery();
-				
-				while(rs.next()) {
-					similarUsers.add(rs.getString("username"));
-				}
-				
-				
-			} catch(Exception e){
-				
-			} finally {
-				try {
-					if (rs != null) {
-						rs.close();
-					}
-					if (ps != null) {
-						ps.close();
-					}
-					if (conn != null) {
-						conn.close();
-					}
-				} catch (SQLException sqle) {
-					System.out.println("sqle: " + sqle.getMessage());
-				}
+			while(rs.next()) {
+				similarUsers.add(rs.getString("username"));
 			}
-			return similarUsers;
+				
+				
+		} catch(Exception e){
+				
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (ps != null) {
+					ps.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException sqle) {
+				System.out.println("sqle: " + sqle.getMessage());
+			}
+		}
+		return similarUsers;
 	}
 }
