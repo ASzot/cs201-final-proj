@@ -1,5 +1,6 @@
 package com.cv.controllers;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -22,12 +23,12 @@ import com.cv.cryptopia.CryptopiaApi;
 import com.cv.cryptowatch.CryptoWatchApi;
 import com.cv.jdbc.get.GetCurrencyInformation;
 import com.cv.model.CandleStickSeries;
-import com.cv.model.TimeSeries;
 import com.cv.model.CurrencyTicker;
 import com.cv.model.Market;
+import com.cv.model.TimeSeries;
 import com.cv.model.TradeSeries;
 import com.cv.movingAverages.Constants;
-import com.cv.movingAverages.MovingAverage;
+import com.cv.movingAverages.MovingAverageCalculator;
 
 @Controller
 public class ExchangeController {
@@ -104,20 +105,35 @@ public class ExchangeController {
   //print Moving Average Data
   @CrossOrigin(origins="http://localhost:8080")
   @RequestMapping(value="/exchange/movingAverage", method=RequestMethod.GET)
-  public @ResponseBody TimeSeries getMovingAverage(
-      @RequestParam(value="interval",required=true) Integer interval,
+  public @ResponseBody Map<Integer, TimeSeries> getMovingAverage(
+      @RequestParam(value="interval1",required=true) Integer interval1,
+      @RequestParam(value="interval2",required=false) Integer interval2,
+      @RequestParam(value="interval3",required=false) Integer interval3,
       @RequestParam(value="fromCur", required=true) String fromCur,
       @RequestParam(value="toCur", required=true) String toCur) {
-
+    
     System.out.println("Got request");
-    MovingAverage movingAverage = new MovingAverage(Constants.SIX_MONTHS_UNIX, fromCur, toCur); //means only taking interval-day moving average for a single month
-    Map<Integer, TimeSeries> seriesMap = movingAverage.calculateSeries(interval);
-    TimeSeries seriesArray = seriesMap.get(interval);
-    System.out.println("TimeSeriesResponse: " + " size: " + seriesArray.size());
-    seriesArray.print();
+    List<Integer> movingAverageIntervals = new ArrayList<Integer>();
+    movingAverageIntervals.add(interval1);
+    movingAverageIntervals.add(interval2);
+    movingAverageIntervals.add(interval3);
+    
+    //constructor takes in entire graph's duration
+    MovingAverageCalculator movingAverageCalculator = new MovingAverageCalculator(Constants.SIX_MONTHS_UNIX, fromCur, toCur); 
+    Map<Integer, TimeSeries> seriesMap = movingAverageCalculator.calculateSeries(movingAverageIntervals);
+    
+    for (Integer key : seriesMap.keySet()) {
+      TimeSeries intervalSeriesArray = seriesMap.get(key);
+      System.out.println("-------------------------------------------------");
+      System.out.println("-------------------------------------------------");
+      System.out.println("-------------------------------------------------");
 
+      System.out.println("TimeSeriesResponse: for moving interval: " + key + " size: " + intervalSeriesArray.size());
+      intervalSeriesArray.print();
+    }
+    
     System.out.println("Got response");
-    return seriesArray;
+    return seriesMap;
   }
 
   @CrossOrigin(origins="http://localhost:8080")

@@ -45,11 +45,19 @@ if __name__ == "__main__":
     #        'password': 'asdf'
     #    })
 
-	print("day length candles, 1 year")
-	get_endpoint("/exchange/candle?fromCur=btc&toCur=usd&period=86400&begin=1508198400&end=1510876800")
+	## Moving average tests for 1 month
+	#print("Moving average test, 1 month")
+	#get_endpoint("/exchange/candle?fromCur=btc&toCur=usd&period=86400&begin=1508198400&end=1510876800")
 
-	print("moving averages")
-	get_endpoint("/exchange/movingAverage?interval=30&fromCur=btc&toCur=usd")
+	#print("moving averages, 1 month")
+	#get_endpoint("/exchange/movingAverage?interval=30&fromCur=btc&toCur=usd")
+	
+	## Moving average tests for 6 months
+	print("Moving average test, 6 months")
+	get_endpoint("/exchange/candle?fromCur=btc&toCur=usd&period=86400&begin=1495152000&end=1511121015")
+
+	print("moving averages, 6 months")
+	get_endpoint("/exchange/movingAverage?interval1=30&interval2=40&interval3=50&fromCur=btc&toCur=usd")
 	
 	
 	    #get_endpoint("/exchange/data?fromCur=DOT&toCur=BTC&time=24")

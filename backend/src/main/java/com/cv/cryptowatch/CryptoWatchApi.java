@@ -117,6 +117,7 @@ public class CryptoWatchApi {
     return markets;
   }
   
+  //MUST PASS IN ARGUMENTS AS END, BEGIN
   public CandleStickSeries getCandlestick(String market, List<String> periods, long before, long after) {   
     List<String> paramParts = new ArrayList<String>();
     if (periods != null && periods.size() > 0) {
