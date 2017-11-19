@@ -58,9 +58,9 @@
     },
     methods: {
       logout () {
-        localStorage.removeItem(GC_USER_ID)
-        localStorage.removeItem(GC_AUTH_TOKEN)
-        this.$root.$data.userId = localStorage.getItem(GC_USER_ID)
+        localStorage.removeItem(GC_USER_ID);
+        localStorage.removeItem(GC_AUTH_TOKEN);
+        this.$root.$data.userId = localStorage.getItem(GC_USER_ID);
       },
       navToMain: function () {
         this.navBarState = 'main';
