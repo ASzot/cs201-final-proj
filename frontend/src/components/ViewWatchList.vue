@@ -44,7 +44,7 @@
             username: localStorage.getItem(GC_USER_ID)
         }, {}).then(response => {
           var res = response.body;
-          console.log("Got response");
+          console.log("Got response: " + response);
           if (res.allCurrencies) {
             _this.userList = res.allCurrencies;
             console.log(_this.userList);
