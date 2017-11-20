@@ -82,7 +82,8 @@
     },
     computed: {
         userId () {
-          return this.$root.$data.userId
+          //return this.$root.$data.userId
+          return localStorage.getItem(GC_USER_ID);
         }
     },
     data: () => ({
