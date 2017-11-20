@@ -11,7 +11,12 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'NavView',
+      name: 'LandingPage',
+      component: NavView
+    },
+    {
+      path: '/coin/:cur',
+      name: 'CoinView',
       component: NavView
     },
     {
