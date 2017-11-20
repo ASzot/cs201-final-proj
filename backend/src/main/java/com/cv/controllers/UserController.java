@@ -82,20 +82,25 @@ public class UserController {
 
  @CrossOrigin(origins="http://localhost:8080")
  @RequestMapping(value="/user/ViewWatchList", method=RequestMethod.POST)
- public @ResponseBody UserWatchListResponse createUser(
+ public @ResponseBody Vector<String> createUser(
      @RequestBody String username) {
    //String parsedTicker = tickerName.substring(11, tickerName.lastIndexOf('"'));
    WatchListGetters watchListGetters = new WatchListGetters(); 
-   System.out.println("Printing username for viewwatchlist: " + username);
+   String parsedUsername = username.substring(13, username.lastIndexOf('"'));
+   System.out.println("Printing username for viewwatchlist: " + parsedUsername);
    //boolean okay = watchListGetters.addTickerStringToWatchList(addTicker.getUserID(), addTicker.getTicker()); 
-   Vector<String> allCurrencies = watchListGetters.getUserWatchListString(username);
-   System.out.println("all currencies size: " + watchListGetters.getUserWatchListString(username).size());
+   Vector<String> allCurrencies = watchListGetters.getUserWatchListString(parsedUsername);
+   System.out.println("all currencies size: " + allCurrencies.size());
+   String allStringCurrency = ""; 
    for(int i = 0; i < allCurrencies.size(); i++){
     System.out.println("Following currency: " + allCurrencies.get(i));
+    allStringCurrency += (allCurrencies.get(i) + ",");
    }
    //System.out.print("testing add return value: " + okay);
-   // System.out.println(okay);
-   return new UserWatchListResponse(allCurrencies);
+    System.out.println(allStringCurrency);
+   //return new UserWatchListResponse(allCurrencies);
+    //return allStringCurrency; 
+    return allCurrencies; 
  }
 
 //vector<String> watchListGetters.getUserWatchListString(String username);
