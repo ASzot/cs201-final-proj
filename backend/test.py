@@ -59,6 +59,8 @@ if __name__ == "__main__":
 	print("moving averages, 6 months")
 	get_endpoint("/exchange/movingAverage?interval1=30&interval2=40&interval3=50&exchange=gdax&duration=5259486&fromCur=btc&toCur=usd")
 	
+	print("moving averages, 1 year")
+	get_endpoint("/exchange/movingAverage?interval1=30&interval2=40&interval3=50&exchange=gdax&duration=10518972&fromCur=btc&toCur=usd")
 	#print("ERROR CASE")
 	#get_endpoint("/exchange/movingAverage?interval1=30&interval2=40&interval3=50&exchange=gdax&duration=10&fromCur=btc&toCur=usd")
 	
