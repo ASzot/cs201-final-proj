@@ -28,7 +28,7 @@ public class MovingAverageCalculator {
   private List<String> dayPeriod; //dummy list to only hold epoch value of 1 day for moving average API Callcalculation
   private Map<Integer, TimeSeries> series;
   private String exchange;
-  private Map<Long, Double> dayPricesCache;
+  private List<Double> dayPricesCache;
   
   public MovingAverageCalculator(long currentUnixTime, long duration, String exchange, List<Integer> dayIntervals, String fromCur, String toCur) {
     series = new HashMap<Integer, TimeSeries>();
@@ -40,10 +40,11 @@ public class MovingAverageCalculator {
     dayPeriod = new ArrayList<String>();
     dayPeriod.add(String.valueOf(Constants.DAY_UNIX));
     this.exchange = exchange; 
-    dayPricesCache = new HashMap<Long, Double>();
+    dayPricesCache = new ArrayList<Double>();
 
     //Begin and execute all threads
     fillDayPriceCache(startGraphTimestamp, endGraphTimestamp);
+    System.out.println("DayPrice cache: " + dayPricesCache.size());
     ExecutorService executors = Executors.newCachedThreadPool();
     for (Integer interval : dayIntervals) {
       TimeSeries ts = new TimeSeries();
@@ -80,7 +81,7 @@ public class MovingAverageCalculator {
       if (point instanceof CandleStickPoint) {
         CandleStickPoint csp = (CandleStickPoint)point;
         intervalSum += csp.getClose();
-        dayPricesCache.put(currentTimestamp, csp.getClose());
+        dayPricesCache.add(csp.getClose());
       }
       else {
         intervalSum += 0;
