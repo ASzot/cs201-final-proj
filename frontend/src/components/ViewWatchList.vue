@@ -1,21 +1,25 @@
 <template>
 <div>
-<h2>View WatchList</h2>
+<h2 style = "text-align: center; margin-top: 5%;">View WatchList</h2>
+
+<p v-if="!userId">Please create an account or login to access the watchlist feature.</p>
 
 <form>
   <div class="container">
-    <div v-if="userId" class="ml1 pointer" @click="onSignup" style = "float:right; font-size:1.5em; cursor: pointer">View currencies</div>
     <div>
       <p>{{ errorMsg }}</p>
     </div>
     
-    <ul id="userSearchDisplay">
-		<li v-for="name in userList">
+    <ul id="userSearchDisplay" v-if="userId">
+		<li v-for="name in userList" style = "font-size: 1.5em;">
 		  {{ name }}
 		</li>
+		<a href = "/" style = "font-size: 1.5em">Home</a>
+		
 	</ul>
   </div>
 </form>
+
 </div>
 </template>
 
@@ -36,6 +40,11 @@
         //return this.$root.$data.userId
         return localStorage.getItem(GC_USER_ID);
       }
+    },
+    beforeMount(){
+    		if(localStorage.getItem(GC_USER_ID) != null){
+    			this.onSignup();
+    		}
     },
     methods: {
       onSignup: function () {

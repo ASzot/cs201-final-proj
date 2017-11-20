@@ -14,6 +14,8 @@
 </template>
 
 <script>
+  import { GC_USER_ID, GC_LOGGED_IN, GC_BACKEND } from '@/constants/settings'
+
   export default {
     name: 'SideBarMenu',
     methods: {
@@ -22,15 +24,20 @@
         if (innerText == "Currencies") {
           this.$emit("navToCurrency");
         }
+        else if(localStorage.getItem(GC_USER_ID) != null){
+        		this.$router.push("/WatchList");
+        }
         else {
           console.log("Invalid element clicked!");
           console.log(innerText);
+          alert("Please login or create an account to use this feature.");
         }
       }
     },
     data: () => ({
       items: [
-        { icon: 'trending_up', text: 'Currencies', onClick:'onCurrency' }
+        { icon: 'trending_up', text: 'Currencies', onClick:'onCurrency' },
+        { icon: 'list' , text: 'UserWatchList'}
       ]
     })
   }
