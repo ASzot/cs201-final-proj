@@ -115,8 +115,8 @@ public class ExchangeController {
       @RequestParam(value="duration",required=true) long duration,
       @RequestParam(value="fromCur", required=true) String fromCur,
       @RequestParam(value="toCur", required=true) String toCur) {
-    
-//    System.out.println("Got request");
+
+    //    System.out.println("Got request");
     List<Integer> movingAverageIntervals = new ArrayList<Integer>();
     movingAverageIntervals.add(interval1);
     movingAverageIntervals.add(interval2);

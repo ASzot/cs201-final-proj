@@ -92,16 +92,17 @@
     ],
     data () {
       return {
-        selectedDataStart: { text: '30 mins', val: "1800" },
+        selectedDataStart: { text: '1 month', val: "2629743" },
         possDataStarts: [
           { text: '30 mins', val:'1800' },
           { text: '1 hr', val:'3600' },
           { text: '1 day', val:'86400' },
           { text: '1 week', val:'604800' },
           { text: '1 month', val:'2629743' },
+          { text: '6 months', val:'15778458' },
           { text: '1 year', val:'31556926' },
         ],
-        selectedDataPeriod: { text: '1 mins', val: '60' },
+        selectedDataPeriod: { text: '1 day', val: '86400' },
         possDataPeriods: [
           { text: '1 min', val: '60' },
           { text: '5 mins', val: '300' },

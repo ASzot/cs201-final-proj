@@ -14,6 +14,7 @@
         lastTimestamp: -1,
         dispData: null,
         dispDates: null,
+        dispMVAs: null
         chartUpdateInterval: null,
         waitingForUpdate: false,
         useChart: null,
@@ -194,13 +195,42 @@
           _this.lastTimestamp = points[points.length - 1].timestamp;
           _this.dispData = _this.getPointData(points)
           _this.dispDates = _this.getDateData(points);
-
+          
+          _this.getMVA(dataStart);
+          
           _this.setChartOptions();
 
           _this.setUpdateInterval();
         }, response => {
           console.log("failure");
           console.log(response);
+        });
+      },
+      getMVA: function(dataStart) {
+        this.$http.get(GC_BACKEND + "/exchange/movingAverage", {
+          params: {
+            interval1: 5,
+            interval2: 6,
+            interval3: 7,
+            exchange: this.market,
+            duration: dataStart,
+            fromCur: this.dispCur,
+            toCur: this.toCur
+          }
+        }, {}).then(response => {
+          var res = response.body;
+
+          var keys = Object.keys(res);
+          var i = 0;
+
+          for (var key in keys) {
+            _this.dispMVAs.push({
+              title: key + ' MVA',
+              data: res[key]
+            });
+          }
+        }, response => {
+          console.log("Error!");
         });
       }
     },
