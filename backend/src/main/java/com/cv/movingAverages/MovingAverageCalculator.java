@@ -7,8 +7,13 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.cv.cryptowatch.CryptoWatchApi;
+import com.cv.cryptowatch.CryptoWatchRest;
+import com.cv.model.CandleStickPoint;
+import com.cv.model.CandleStickSeries;
 import com.cv.model.MovingAveragePoint;
 import com.cv.model.TimeSeries;
+import com.cv.model.TimeSeriesPoint;
 
 public class MovingAverageCalculator {
 //  @Autowired
@@ -19,7 +24,7 @@ public class MovingAverageCalculator {
   private long startGraphTimestamp;
   private long endGraphTimestamp;
   private String market;
-//  private CryptoWatchApi cryptoWatchApi;
+  private CryptoWatchApi cryptoWatchApi;
   private List<String> dayPeriod; //dummy list to only hold epoch value of 1 day for moving average API Callcalculation
   private Map<Integer, TimeSeries> series;
   private String exchange;
@@ -38,6 +43,7 @@ public class MovingAverageCalculator {
     dayPricesCache = new HashMap<Long, Double>();
 
     //Begin and execute all threads
+    fillDayPriceCache(startGraphTimestamp, endGraphTimestamp);
     ExecutorService executors = Executors.newCachedThreadPool();
     for (Integer interval : dayIntervals) {
       TimeSeries ts = new TimeSeries();
@@ -61,6 +67,38 @@ public class MovingAverageCalculator {
     return series;
   }
   
+  //Returns the sum of prices over an interval specified by [startInterval, endInterval]
+  private void fillDayPriceCache(long startInterval, long endInterval) {
+    CandleStickSeries candles = getCrypowatchApi().getCandlestick(market, exchange, dayPeriod, endInterval, startInterval);
+    if (candles == null) return;
+    Double intervalSum = 0.0;
+    long currentTimestamp = startInterval;
+    TimeSeries ts = candles.getPeriods().get(Constants.DAY_UNIX);
+    List<TimeSeriesPoint> points = ts.getTimeSeriesPoints();
+    
+    for (TimeSeriesPoint point : points) {
+      if (point instanceof CandleStickPoint) {
+        CandleStickPoint csp = (CandleStickPoint)point;
+        intervalSum += csp.getClose();
+        dayPricesCache.put(currentTimestamp, csp.getClose());
+      }
+      else {
+        intervalSum += 0;
+      }
+      currentTimestamp = nextDay(currentTimestamp);
+    }
+  }
+  
+  private Long nextDay(Long timestamp) {
+    return timestamp + Constants.DAY_UNIX;
+  }
+  
+  private CryptoWatchApi getCrypowatchApi() {
+    if (cryptoWatchApi == null) {
+      cryptoWatchApi = new CryptoWatchApi(new CryptoWatchRest());
+    }
+    return cryptoWatchApi;
+  }
 }
 
 //  //calculates moving averages for one series

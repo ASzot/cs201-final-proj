@@ -4,13 +4,19 @@ import NavView from '@/components/NavView'
 import Register from '@/components/Register.vue'
 import Login from '@/components/Login.vue'
 import UserSearch from '@/components/UserSearch.vue'
+import UserWatchlistSocketTest from '@/components/UserWatchlistSocketTest.vue'
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
       path: '/',
-      name: 'NavView',
+      name: 'LandingPage',
+      component: NavView
+    },
+    {
+      path: '/coin/:cur',
+      name: 'CoinView',
       component: NavView
     },
     {
@@ -24,6 +30,10 @@ export default new Router({
     {
     		path: '/UserSearch',
     		component: UserSearch
+    },
+    {
+    		path:'/UserWatchlistSocketTest',
+    		component: UserWatchlistSocketTest
     }
   ]
 })

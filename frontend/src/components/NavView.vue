@@ -27,7 +27,7 @@
         <span>Cryptowatch</span>
 	      </v-toolbar-title>
 	       <div class="flex flex-fixed">
-	 	      <div v-if="userId" class="ml1 pointer" @click="logout" style = "float:right;">logout</div>
+	 	      <div v-if="userId" class="ml1 pointer" @click="logout" style = "float:right; font-size:1.5em; cursor: pointer">logout</div>
 	 	      <div v-else>
 	 		      <router-link v-if= "$route.path != '/login'"  to="/login" class="ml1 no-underline">login</router-link>
 	 		      <router-link v-if= "$route.path != '/register'"  to="/register" class="ml1 no-underline">register</router-link>
@@ -62,9 +62,10 @@
         localStorage.removeItem(GC_AUTH_TOKEN);
         this.$root.$data.userId = null;
         console.log("logout function called");
-        //this.$forceUpdate(); 
-        //reload component
-        Object.assign(this.$data, this.$options.data.call(this));
+
+        console.log("before reloadsfd call");
+      	window.location.reload(true);
+      	console.log("after reload call");
       },
       navToMain: function () {
         this.navBarState = 'main';
@@ -73,7 +74,7 @@
         this.navBarState = 'currency';
       },
       changeDispCur: function(dispCur) {
-        this.dispCur = dispCur;
+        this.$router.push('/coin/' + dispCur);
       },
     },
     created: function () {
@@ -85,17 +86,25 @@
       this.$off("navToMain", this.navToMain);
     },
     computed: {
-        userId () {
-          console.log("In userId function: " + this.$root.$data.userId);
-          console.log("val of gcuserid in localstorage " + localStorage.getItem(GC_USER_ID));
-          //return this.$root.$data.userId
-          return localStorage.getItem(GC_USER_ID);
+      userId () {
+        console.log("In userId function: " + this.$root.$data.userId);
+        console.log("val of gcuserid in localstorage " + localStorage.getItem(GC_USER_ID));
+        //return this.$root.$data.userId
+        return localStorage.getItem(GC_USER_ID);
+      },
+      dispCur() {
+        if (!this.$route.params.hasOwnProperty("cur")) {
+          // The default 
+          return "btc";
         }
+        else {
+          return this.$route.params.cur;
+        }
+      }
     },
     data: () => ({
       drawer: true,
       navBarState: 'main',
-      dispCur: 'btc'
     }),
     watch: {
       drawer: function(val) {

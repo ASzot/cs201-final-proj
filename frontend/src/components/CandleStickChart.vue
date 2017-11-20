@@ -6,6 +6,7 @@
 
 <script>
   import { GC_BACKEND, GC_UPDATE_TIMES } from '@/constants/settings.js'
+  import utils from '@/utility.js'
 
   export default {
     data () {
@@ -24,7 +25,8 @@
       'dispCur',
       'toCur',
       'market',
-      'dataPeriod'
+      'dataPeriod',
+      'dataStart'
     ],
     methods: {
       setChartOptions: function() {
@@ -112,7 +114,7 @@
             toCur: this.toCur,
             exchange: this.market,
             period: this.dataPeriod,
-            begin: _this.lastTimestamp
+            begin: this.lastTimestamp
           }
         }, {}).then(response => {
           var res = response.body;
@@ -154,8 +156,12 @@
           this.chartUpdateInterval = setInterval(this.updateChart, updateInterval);
         }
       },
-      setChart: function(dataPeriod) {
-        console.log("Fetching data");
+      setChart: function(fetchInfo) {
+        console.log("Passed:");
+        console.log(fetchInfo);
+        var dataStart = fetchInfo.dataStart;
+        var dataPeriod = fetchInfo.dataPeriod;
+
         console.log("Got data period " + dataPeriod);
         var _ = this._;
         var _this = this;
@@ -168,12 +174,14 @@
         }
 
         console.log("Calling endpoint");
+        var begin = utils.getUnixTime() - dataStart;
         this.$http.get(GC_BACKEND + "/exchange/candle", {
           params: {
             fromCur: this.dispCur,
             toCur: this.toCur,
             exchange: this.market,
-            period: dataPeriod
+            period: dataPeriod,
+            begin: begin
           }
         }, {}).then(response => {
           var res = response.body;
@@ -206,7 +214,10 @@
     },
     mounted: function () {
       // Request chart data.
-      this.setChart(this.dataPeriod);
+      this.setChart({
+        dataStart: this.dataStart, 
+        dataPeriod: this.dataPeriod
+      });
     }
   }
 </script>
