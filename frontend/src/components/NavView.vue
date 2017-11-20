@@ -62,15 +62,10 @@
         localStorage.removeItem(GC_AUTH_TOKEN);
         this.$root.$data.userId = null;
         console.log("logout function called");
-<<<<<<< HEAD
-        //this.$forceUpdate(); 
-        //reload component
-        //Object.assign(this.$data, this.$options.data.call(this));
-=======
+
         console.log("before reloadsfd call");
       	window.location.reload(true);
       	console.log("after reload call");
->>>>>>> 8d5dbf486eec8e9e6f0be51db0881f0a907dd4df
       },
       navToMain: function () {
         this.navBarState = 'main';
