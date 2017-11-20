@@ -195,10 +195,12 @@
           var res = response.body;
           console.log("Got response");
           if (!res.okay) {
-            _this.errorMsg = "You have already added the ticker";
+            //_this.errorMsg = "You have already added the ticker";
+            alert("You have already added the ticker " + dispCur);
           }
           else {
-            console.log("Ticker Added");
+            console.log(dispCur + " Added");
+            alert(dispCur + " has been added to your watch list");
           }
 
         }, response => {
