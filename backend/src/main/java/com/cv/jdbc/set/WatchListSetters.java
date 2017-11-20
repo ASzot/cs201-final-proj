@@ -21,7 +21,18 @@ public class WatchListSetters {
 		
 	}
 	
-	public boolean addToWatchList(int userID, int currencyID) {
+	public boolean addTickerStringToWatchList(String username, String ticker) {
+		ValidateUser myUserValidation = new ValidateUser();
+		GetCurrencyInformation myCurrencyInfo = new GetCurrencyInformation();
+		
+		int userID = myUserValidation.getUserID(username);
+		int tickerID = myCurrencyInfo.getIDFromTicker(ticker);
+		
+		return addTickerIDWatchList(userID, tickerID);
+	}
+	
+	
+	public boolean addTickerIDWatchList(int userID, int currencyID) {
 		Connection conn = ConnectToDB.getDBConnection();
 		boolean added = false;
 		ValidateUser validateUserID = new ValidateUser();
