@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import { GC_BACKEND } from '@/constants/settings.js'
+  import { GC_BACKEND, GC_UPDATE_TIMES } from '@/constants/settings.js'
 
   export default {
     data () {
@@ -15,14 +15,16 @@
         dispDates: null,
         chartUpdateInterval: null,
         waitingForUpdate: false,
-        useChart: null
+        useChart: null,
+        currentlySetting: false
       }
     },
     props: [
       'shouldUpdateGraph', 
       'dispCur',
       'toCur',
-      'market'
+      'market',
+      'dataPeriod'
     ],
     methods: {
       setChartOptions: function() {
@@ -92,11 +94,10 @@
           }]
         };
 
-        console.log("Setting chart");
         this.useChart.setOption(option);
       },
       updateChart: function() {
-        if (this.waitingForUpdate || !this.shouldUpdateGraph) {
+        if (this.waitingForUpdate || !this.shouldUpdateGraph || this.currentlySetting) {
           return;
         }
 
@@ -107,16 +108,17 @@
         this.waitingForUpdate = true;
         this.$http.get(GC_BACKEND + "/exchange/candle", {
           params: {
-            fromCur: _this.dispCur,
-            toCur: 'usd',
-            period: '60',
+            fromCur: this.dispCur,
+            toCur: this.toCur,
+            exchange: this.market,
+            period: this.dataPeriod,
             begin: _this.lastTimestamp
           }
         }, {}).then(response => {
           var res = response.body;
 
           var periods = res.periods;
-          var points = periods['60'].timeSeriesPoints;
+          var points = periods[_this.dataPeriod].timeSeriesPoints;
 
           var pointData = _this.getPointData(points);
           var dateData = _this.getDateData(points);
@@ -125,9 +127,13 @@
           _this.dispData = _this.dispData.concat(pointData);
           _this.dispDates = _this.dispDates.concat(dateData);
 
+          // Last point before chart is set.
+          if (_this.currentlySetting) {
+            return;
+          }
+
           _this.setChartOptions();
           _this.waitingForUpdate = false;
-
         }, response => {
           console.log("Error!");
         });
@@ -142,38 +148,48 @@
             return [+trade.open, +trade.high, +trade.low, +trade.close];
           });
       },
-      setChart: function() {
+      setUpdateInterval: function () {
+        if (this.dataPeriod in GC_UPDATE_TIMES) {
+          var updateInterval = GC_UPDATE_TIMES[this.dataPeriod];
+          this.chartUpdateInterval = setInterval(this.updateChart, updateInterval);
+        }
+      },
+      setChart: function(dataPeriod) {
         console.log("Fetching data");
+        console.log("Got data period " + dataPeriod);
         var _ = this._;
         var _this = this;
 
+        // We don't want the chart updating part of the way through this.
+        if (this.chartUpdateInterval != null) {
+          clearInterval(this.chartUpdateInterval);
+          this.chartUpdateInterval = null;
+          this.currentlySetting = true;
+        }
+
         console.log("Calling endpoint");
-        var period = "60";
         this.$http.get(GC_BACKEND + "/exchange/candle", {
           params: {
             fromCur: this.dispCur,
             toCur: this.toCur,
             exchange: this.market,
-            period: period
+            period: dataPeriod
           }
         }, {}).then(response => {
           var res = response.body;
 
           var periods = res.periods;
-          var points = periods[period].timeSeriesPoints;
+          console.log("Fetching period " + _this.dataPeriod);
+          var points = periods[dataPeriod].timeSeriesPoints;
 
+          this.currentlySetting = false;
           _this.lastTimestamp = points[points.length - 1].timestamp;
           _this.dispData = _this.getPointData(points)
           _this.dispDates = _this.getDateData(points);
 
           _this.setChartOptions();
 
-          if (_this.chartUpdateInterval != null) {
-            clearInterval(this.chartUpdateInterval);
-            _this.chartUpdateInterval = null;
-          }
-
-          _this.chartUpdateInterval = setInterval(_this.updateChart, 5000);
+          _this.setUpdateInterval();
         }, response => {
           console.log("failure");
           console.log(response);
@@ -181,10 +197,6 @@
       }
     },
     watch: {
-      //dispCur: function(oldVal, newVal) {
-      //  console.log("Redrawing chart for currency " + this.dispCur);
-      //  this.setChart();
-      //}
     },
     destroyed: function() {
       clearInterval(this.chartUpdateInterval);
@@ -194,7 +206,7 @@
     },
     mounted: function () {
       // Request chart data.
-      this.setChart();
+      this.setChart(this.dataPeriod);
     }
   }
 </script>

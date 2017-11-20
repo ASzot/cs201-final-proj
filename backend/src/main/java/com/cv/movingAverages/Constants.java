@@ -1,5 +1,6 @@
 package com.cv.movingAverages;
 
+// In seconds
 public class Constants {
   public static long ONE_MONTH_UNIX = 2629743;
   public static long SIX_MONTHS_UNIX = 15778463;
