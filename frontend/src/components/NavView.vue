@@ -64,7 +64,7 @@
         console.log("logout function called");
         //this.$forceUpdate(); 
         //reload component
-        Object.assign(this.$data, this.$options.data.call(this));
+        //Object.assign(this.$data, this.$options.data.call(this));
       },
       navToMain: function () {
         this.navBarState = 'main';
