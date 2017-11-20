@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.cv.AppContext;
 import com.cv.DefaultResponse;
 //import com.cv.UserSearchResponse;
+
 import com.cv.jdbc.get.UserSearch;
 import com.cv.jdbc.get.ValidateUser;
 import com.cv.jdbc.set.AddUser;
@@ -58,4 +59,5 @@ public class UserController {
 //    Vector<String> allUsers = userSearch.searchForSimilarUser(userSearchData.getUsername());
 //    return new UserSearchResponse(allUsers);
 //  }
+
 }

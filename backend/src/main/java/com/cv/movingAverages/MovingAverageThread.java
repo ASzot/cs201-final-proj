@@ -14,6 +14,7 @@ import com.cv.model.TimeSeries;
 import com.cv.model.TimeSeriesPoint;
 
 public class MovingAverageThread implements Runnable {
+  private String exchange;
   private int dayInterval;
   private TimeSeries ts;
   private Long secondsInterval;
@@ -25,7 +26,8 @@ public class MovingAverageThread implements Runnable {
   private CryptoWatchApi cryptoWatchApi;
   private List<String> dayPeriod; //dummy list to only hold epoch value of 1 day for moving average API Callcalculation
   
-  public MovingAverageThread(int dayInterval, TimeSeries ts, long startGraphTimestamp, long endGraphTimestamp, String fromCur, String toCur) {
+  public MovingAverageThread(String exchange, int dayInterval, TimeSeries ts, long startGraphTimestamp, long endGraphTimestamp, String fromCur, String toCur) {
+    this.exchange = exchange; 
     this.dayInterval = dayInterval;
     this.ts = ts;
     secondsInterval = dayInterval * Constants.DAY_UNIX;
@@ -39,13 +41,13 @@ public class MovingAverageThread implements Runnable {
   }
   
   public void run () {
-    Double prevIntervalSum = calculateInitialSum(startInterval, endInterval, dayPricesCache); 
+    Double prevIntervalSum = calculateInitialSum(exchange, startInterval, endInterval, dayPricesCache); 
     Double prevStartPrice = 0.0;
     if (dayPricesCache.containsKey(startInterval)) {
       prevStartPrice = dayPricesCache.get(startInterval);
     }
     else {
-      prevStartPrice = getPrice(startInterval);
+      prevStartPrice = getPrice(exchange, startInterval);
       dayPricesCache.put(startInterval, prevStartPrice);
     }
     Double average = calculateAverage(prevIntervalSum, dayInterval);
@@ -57,7 +59,7 @@ public class MovingAverageThread implements Runnable {
 
     while (endInterval <= seriesEnd) {
       //get the price of the last day for this interval
-      Double endIntervalPrice = getPrice(endInterval);
+      Double endIntervalPrice = getPrice(exchange, endInterval);
       dayPricesCache.put(endInterval, endIntervalPrice);
       
       //transform previous interval sum to calculate this interval sum
@@ -75,7 +77,7 @@ public class MovingAverageThread implements Runnable {
         prevStartPrice = dayPricesCache.get(startInterval);
       }
       else {
-        prevStartPrice = getPrice(startInterval);
+        prevStartPrice = getPrice(exchange, startInterval);
         dayPricesCache.put(startInterval, prevStartPrice);
       }
       
@@ -85,8 +87,8 @@ public class MovingAverageThread implements Runnable {
   }
   
   //Returns the sum of prices over an interval specified by [startInterval, endInterval]
-  private Double calculateInitialSum(long startInterval, long endInterval, Map<Long, Double> prices) {
-    CandleStickSeries candles = getCrypowatchApi().getCandlestick(market, dayPeriod, endInterval, startInterval);
+  private Double calculateInitialSum(String exchange, long startInterval, long endInterval, Map<Long, Double> prices) {
+    CandleStickSeries candles = getCrypowatchApi().getCandlestick(market, exchange, dayPeriod, endInterval, startInterval);
     Double intervalSum = 0.0;
     long currentTimestamp = startInterval;
     TimeSeries ts = candles.getPeriods().get(Constants.DAY_UNIX);
@@ -116,11 +118,11 @@ public class MovingAverageThread implements Runnable {
   }
   
   //Returns the closing price for a single day : [timestamp, timestamp + 1 day]
-  private Double getPrice(long timestamp) {
+  private Double getPrice(String exchange, Long timestamp) {
     long begin = timestamp;
     long end = timestamp + Constants.DAY_UNIX;    
     
-    CandleStickSeries candles = getCrypowatchApi().getCandlestick(market, dayPeriod, end, begin);
+    CandleStickSeries candles = getCrypowatchApi().getCandlestick(market, exchange, dayPeriod, end, begin);
     if (candles == null || candles.getPeriods().size() > 1) {
       return 0.0;
     }

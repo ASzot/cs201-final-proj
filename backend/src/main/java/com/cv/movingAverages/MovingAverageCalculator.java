@@ -21,10 +21,11 @@ public class MovingAverageCalculator {
 //  private CryptoWatchApi cryptoWatchApi;
   private List<String> dayPeriod; //dummy list to only hold epoch value of 1 day for moving average API Callcalculation
   private Map<Integer, TimeSeries> series;
+  private String exchange;
   
   //ADD EXCHANGE INTO CRYPTOWATCH CALL
   
-  public MovingAverageCalculator(long duration, List<Integer> dayIntervals, String fromCur, String toCur) {
+  public MovingAverageCalculator(long duration, String exchange, List<Integer> dayIntervals, String fromCur, String toCur) {
     series = new HashMap<Integer, TimeSeries>();
     this.dayIntervals = dayIntervals;
     this.duration = duration;
@@ -33,13 +34,14 @@ public class MovingAverageCalculator {
     this.market = fromCur + toCur;
     dayPeriod = new ArrayList<String>();
     dayPeriod.add(String.valueOf(Constants.DAY_UNIX));
+    this.exchange = exchange; 
     
     //new MovingAverageCalculator -> only in this function
     ExecutorService executors = Executors.newCachedThreadPool();
     for (Integer interval : dayIntervals) {
       TimeSeries ts = new TimeSeries();
       series.put(interval, ts);
-      MovingAverageThread mat = new MovingAverageThread(interval, ts, startGraphTimestamp, endGraphTimestamp, fromCur, toCur);
+      MovingAverageThread mat = new MovingAverageThread(exchange, interval, ts, startGraphTimestamp, endGraphTimestamp, fromCur, toCur);
       executors.execute(mat);
     }
     executors.shutdown();

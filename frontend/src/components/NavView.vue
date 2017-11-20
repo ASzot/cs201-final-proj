@@ -71,8 +71,6 @@
         this.navBarState = 'currency';
       },
       changeDispCur: function(dispCur) {
-        console.log("Wanting to change display currency to: ");
-        console.log(dispCur);
         this.dispCur = dispCur;
       },
     },
@@ -88,7 +86,7 @@
         userId () {
           console.log("In userId function: " + this.$root.$data.userId);
           console.log("val of gcuserid in localstorage " + localStorage.getItem(GC_USER_ID));
-          //return this.$root.$data.userId;
+          //return this.$root.$data.userId
           return localStorage.getItem(GC_USER_ID);
         }
     },
