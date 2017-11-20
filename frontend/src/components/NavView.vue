@@ -69,8 +69,6 @@
         this.navBarState = 'currency';
       },
       changeDispCur: function(dispCur) {
-        console.log("Wanting to change display currency to: ");
-        console.log(dispCur);
         this.dispCur = dispCur;
       },
     },

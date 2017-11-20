@@ -76,6 +76,7 @@
       },
       displaySummary: function () {
         var _this = this;
+        console.log("use market is " + this.useMarket);
         this.$http.get(GC_BACKEND + "/exchange/summary", {
           params: {
             fromCur: this.dispCur,
@@ -93,7 +94,7 @@
           console.log("Error");
         });
       },
-      updateView: function () {
+      updateView: function (afterUpdate) {
         var _this = this;
         this.$http.get(GC_BACKEND + "/exchange/markets", {
           params: {
@@ -113,10 +114,12 @@
           console.log("Got matching market");
           console.log(useMarket);
 
-          _this.useMarket = useMarket.market;
+          _this.useMarket = useMarket.exchange;
+          console.log("Changed market to " + _this.useMarket);
           _this.toCur = useMarket.toCur.ticker;
 
           _this.$emit("updateChart");
+          afterUpdate();
         }, response => {
           console.log("Error");
         });
@@ -130,8 +133,7 @@
     watch: {
       dispCur: function(val) {
         console.log("Display currency changed!");
-        this.updateView();
-        this.displaySummary();
+        this.updateView(this.displaySummary);
       }
     },
     mounted: function () {
