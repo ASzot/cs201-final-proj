@@ -19,6 +19,7 @@ import com.cv.jdbc.get.ValidateUser;
 import com.cv.jdbc.set.AddUser;
 import com.cv.model.UserData;
 import com.cv.model.UserSearchData;
+//import com.cv.model.UserSearchResponse;
 
 @Controller
 public class UserController {
@@ -30,7 +31,9 @@ public class UserController {
   public @ResponseBody DefaultResponse loginUser(
       @RequestBody UserData userData) {
     
+    System.out.println("Got login request");
     ValidateUser validateUser = new ValidateUser();
+    System.out.println("Username and password in login controller: " + userData.getUsername() + " and the password is: " + userData.getPassword());
     boolean okay = validateUser.validateUsernameAndPassword(userData.getUsername(), userData.getPassword());
     System.out.println("Testing boolean: " + okay);
     return new DefaultResponse(okay);
@@ -49,15 +52,15 @@ public class UserController {
     return new DefaultResponse(okay);
   }
   
-//  @CrossOrigin(origins="http://localhost:8080")
-//  @RequestMapping(value="/user/search", method=RequestMethod.POST)
-//  public @ResponseBody DefaultResponse createUser(
-//      @RequestBody UserSearchData userSearchData) {
-//
-//    System.out.println("Got request to search for user");
-//    UserSearch userSearch = new UserSearch(); 
-//    Vector<String> allUsers = userSearch.searchForSimilarUser(userSearchData.getUsername());
-//    return new UserSearchResponse(allUsers);
-//  }
+ // @CrossOrigin(origins="http://localhost:8080")
+ // @RequestMapping(value="/user/search", method=RequestMethod.POST)
+ // public @ResponseBody UserSearchResponse createUser(
+ //     @RequestBody UserSearchData userSearchData) {
+
+ //   System.out.println("Got request to search for user");
+ //   UserSearch userSearch = new UserSearch(); 
+ //   Vector<String> allUsers = userSearch.searchForSimilarUser(userSearchData.getUsername());
+ //   return new UserSearchResponse(allUsers);
+ // }
 
 }

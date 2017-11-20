@@ -24,9 +24,9 @@ public class MovingAverageThread implements Runnable {
   private Map<Long, Double> dayPricesCache;
   private String market;
   private CryptoWatchApi cryptoWatchApi;
-  private List<String> dayPeriod; //dummy list to only hold epoch value of 1 day for moving average API Callcalculation
+  private List<String> dayPeriod; //dummy list to only hold epoch value of 1 day for moving average API Call calculation
   
-  public MovingAverageThread(String exchange, int dayInterval, TimeSeries ts, long startGraphTimestamp, long endGraphTimestamp, String fromCur, String toCur) {
+  public MovingAverageThread(String exchange, int dayInterval, TimeSeries ts, long startGraphTimestamp, long endGraphTimestamp, String fromCur, String toCur, Map<Long, Double> dayPricesCache) {
     this.exchange = exchange; 
     this.dayInterval = dayInterval;
     this.ts = ts;
@@ -38,6 +38,7 @@ public class MovingAverageThread implements Runnable {
     this.market = fromCur + toCur;
     dayPeriod = new ArrayList<String>();
     dayPeriod.add(String.valueOf(Constants.DAY_UNIX));
+    this.dayPricesCache = dayPricesCache;
   }
   
   public void run () {
@@ -89,6 +90,7 @@ public class MovingAverageThread implements Runnable {
   //Returns the sum of prices over an interval specified by [startInterval, endInterval]
   private Double calculateInitialSum(String exchange, long startInterval, long endInterval, Map<Long, Double> prices) {
     CandleStickSeries candles = getCrypowatchApi().getCandlestick(market, exchange, dayPeriod, endInterval, startInterval);
+    if (candles == null) return 0.0;
     Double intervalSum = 0.0;
     long currentTimestamp = startInterval;
     TimeSeries ts = candles.getPeriods().get(Constants.DAY_UNIX);
@@ -127,7 +129,7 @@ public class MovingAverageThread implements Runnable {
       return 0.0;
     }
     
-    //Will return 2 values -- only want to take the first one because corresponds to start interval**
+    //Will return 2 values -- only want to take the first one because corresponds to start interval
     CandleStickPoint csp = null;
     if (candles.getPeriods().get(Constants.DAY_UNIX).get(0) instanceof CandleStickPoint) {
       csp = (CandleStickPoint)candles.getPeriods().get(Constants.DAY_UNIX).get(0);
