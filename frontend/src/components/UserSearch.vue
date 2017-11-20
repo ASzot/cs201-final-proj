@@ -40,9 +40,9 @@
       onSignup: function () {
         var _this = this;
         this.$http.post(GC_BACKEND + "/user/search", {
-          params: {
+          //params: {
             username: _this.username
-          }
+          //}
         }, {}).then(response => {
           var res = response.body;
           console.log("Got response");
