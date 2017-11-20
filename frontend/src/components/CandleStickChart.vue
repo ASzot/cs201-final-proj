@@ -18,7 +18,12 @@
         useChart: null
       }
     },
-    props: ['shouldUpdateGraph', 'dispCur'],
+    props: [
+      'shouldUpdateGraph', 
+      'dispCur',
+      'toCur',
+      'market'
+    ],
     methods: {
       setChartOptions: function() {
         console.log("Setting chart options");
@@ -147,7 +152,8 @@
         this.$http.get(GC_BACKEND + "/exchange/candle", {
           params: {
             fromCur: this.dispCur,
-            toCur: 'usd',
+            toCur: this.toCur,
+            exchange: this.market,
             period: period
           }
         }, {}).then(response => {
@@ -175,13 +181,16 @@
       }
     },
     watch: {
-      dispCur: function(oldVal, newVal) {
-        console.log("Redrawing chart for currency " + this.dispCur);
-        this.setChart();
-      }
+      //dispCur: function(oldVal, newVal) {
+      //  console.log("Redrawing chart for currency " + this.dispCur);
+      //  this.setChart();
+      //}
     },
     destroyed: function() {
       clearInterval(this.chartUpdateInterval);
+    },
+    created: function () {
+      this.$parent.$on('updateChart', this.setChart);
     },
     mounted: function () {
       // Request chart data.
