@@ -42,13 +42,34 @@
 
     <v-checkbox v-model="shouldUpdate" label="Dynamically Update Chart?"></v-checkbox>
 
-    <v-select
-      v-bind:items="possDataPeriods"
-      v-model="selectedDataPeriod"
-      placeholder="15 mins"
-      single-line
-      bottom>
-    </v-select>
+    <v-container fluid>
+      <v-layout row wrap>
+        <v-flex xs6>
+          <v-card class='card-pad'>
+            <v-subheader>Candle Interval</v-subheader>
+            <v-select
+              v-bind:items="possDataPeriods"
+              v-model="selectedDataPeriod"
+              :placeholder="selectedDataPeriod.text"
+              single-line
+              bottom>
+            </v-select>
+          </v-card>
+        </v-flex>
+        <v-flex xs6>
+          <v-card class='card-pad'>
+            <v-subheader>Data Start</v-subheader>
+            <v-select
+              v-bind:items="possDataStarts"
+              v-model="selectedDataStart"
+              :placeholder="selectedDataStart.text"
+              single-line
+              bottom>
+            </v-select>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
 
     <candle-stick-chart 
       v-bind:shouldUpdateGraph="shouldUpdate" 
@@ -56,6 +77,7 @@
       v-bind:toCur="toCur"
       v-bind:market="useMarket"
       v-bind:dataPeriod="selectedDataPeriod.val"
+      v-bind:dataStart="selectedDataStart.val"
       >
     </candle-stick-chart>
   </div>
@@ -75,15 +97,26 @@
     ],
     data () {
       return {
-        selectedDataPeriod: { text: '15 mins', val: "900" },
-        possDataPeriods: [
-          { text: '15 mins', val:'900' },
+        selectedDataStart: { text: '1 month', val: "2629743" },
+        possDataStarts: [
           { text: '30 mins', val:'1800' },
           { text: '1 hr', val:'3600' },
           { text: '1 day', val:'86400' },
           { text: '1 week', val:'604800' },
           { text: '1 month', val:'2629743' },
+          { text: '6 months', val:'15778458' },
           { text: '1 year', val:'31556926' },
+        ],
+        selectedDataPeriod: { text: '1 day', val: '86400' },
+        possDataPeriods: [
+          { text: '1 min', val: '60' },
+          { text: '5 mins', val: '300' },
+          { text: '10 mins', val:'600' },
+          { text: '15 mins', val:'900' },
+          { text: '30 mins', val:'1800' },
+          { text: '1 hr', val:'3600' },
+          { text: '1 day', val:'86400' },
+          { text: '1 week', val:'604800' },
         ],
         shouldUpdate: false,
         useMarket: 'gdax',
@@ -139,7 +172,11 @@
           console.log("Changed market to " + _this.useMarket);
           _this.toCur = useMarket.toCur.ticker;
 
-          _this.$emit("updateChart", this.selectedDataPeriod.val);
+          this.$emit("updateChart", {
+            dataStart: this.selectedDataStart.val, 
+            dataPeriod: this.selectedDataPeriod.val
+          });
+
           if (afterUpdate != null) {
             afterUpdate();
           }
@@ -184,7 +221,16 @@
         this.updateView(this.displaySummary);
       },
       selectedDataPeriod: function (val) {
-        this.$emit("updateChart", this.selectedDataPeriod.val);
+        this.$emit("updateChart", {
+          dataStart: this.selectedDataStart.val, 
+          dataPeriod: this.selectedDataPeriod.val
+        });
+      },
+      selectedDataStart: function (val) {
+        this.$emit("updateChart", {
+          dataStart: this.selectedDataStart.val, 
+          dataPeriod: this.selectedDataPeriod.val
+        });
       }
     },
     mounted: function () {
@@ -199,5 +245,8 @@
   }
   .pos-percent {
     color: #2ecc71;
+  }
+  .card-pad {
+    padding: 5px;
   }
 </style>

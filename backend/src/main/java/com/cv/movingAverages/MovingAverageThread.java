@@ -60,8 +60,14 @@ public class MovingAverageThread implements Runnable {
 
     while (endInterval <= seriesEnd) {
       //get the price of the last day for this interval
-      Double endIntervalPrice = getPrice(exchange, endInterval);
-      dayPricesCache.put(endInterval, endIntervalPrice);
+      Double endIntervalPrice = 0.0;
+      if (dayPricesCache.containsKey(endInterval)) {
+        endIntervalPrice = dayPricesCache.get(endInterval);
+      }
+      else {
+        endIntervalPrice = getPrice(exchange, endInterval);
+        dayPricesCache.put(endInterval, endIntervalPrice);
+      }
       
       //transform previous interval sum to calculate this interval sum
       Double currIntervalSum = prevIntervalSum - prevStartPrice + endIntervalPrice;
