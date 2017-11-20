@@ -36,12 +36,22 @@
       </v-layout>
     </v-container>
 
-    <v-checkbox label="Dynamically Update Chart?" @click="checkedUpdate"></v-checkbox>
+    <v-checkbox v-model="shouldUpdate" label="Dynamically Update Chart?"></v-checkbox>
+
+    <v-select
+      v-bind:items="possDataPeriods"
+      v-model="selectedDataPeriod"
+      placeholder="15 mins"
+      single-line
+      bottom>
+    </v-select>
+
     <candle-stick-chart 
       v-bind:shouldUpdateGraph="shouldUpdate" 
       v-bind:dispCur="dispCur"
       v-bind:toCur="toCur"
       v-bind:market="useMarket"
+      v-bind:dataPeriod="selectedDataPeriod.val"
       >
     </candle-stick-chart>
   </div>
@@ -60,6 +70,16 @@
     ],
     data () {
       return {
+        selectedDataPeriod: { text: '15 mins', val: "900" },
+        possDataPeriods: [
+          { text: '15 mins', val:'900' },
+          { text: '30 mins', val:'1800' },
+          { text: '1 hr', val:'3600' },
+          { text: '1 day', val:'86400' },
+          { text: '1 week', val:'604800' },
+          { text: '1 month', val:'2629743' },
+          { text: '1 year', val:'31556926' },
+        ],
         shouldUpdate: false,
         useMarket: 'gdax',
         toCur: 'usd',
@@ -71,12 +91,8 @@
       }
     },
     methods: {
-      checkedUpdate: function () {
-        this.shouldUpdate = !this.shouldUpdate;
-      },
       displaySummary: function () {
         var _this = this;
-        console.log("use market is " + this.useMarket);
         this.$http.get(GC_BACKEND + "/exchange/summary", {
           params: {
             fromCur: this.dispCur,
@@ -118,8 +134,10 @@
           console.log("Changed market to " + _this.useMarket);
           _this.toCur = useMarket.toCur.ticker;
 
-          _this.$emit("updateChart");
-          afterUpdate();
+          _this.$emit("updateChart", this.selectedDataPeriod.val);
+          if (afterUpdate != null) {
+            afterUpdate();
+          }
         }, response => {
           console.log("Error");
         });
@@ -134,6 +152,9 @@
       dispCur: function(val) {
         console.log("Display currency changed!");
         this.updateView(this.displaySummary);
+      },
+      selectedDataPeriod: function (val) {
+        this.$emit("updateChart", this.selectedDataPeriod.val);
       }
     },
     mounted: function () {
