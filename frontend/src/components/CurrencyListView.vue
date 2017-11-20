@@ -4,7 +4,7 @@
     <v-list dense>
       <v-list-tile-content v-for="ticker in filteredTickers" :key="ticker" >
         <v-list-tile-title class='center-currency' @click="onOptionSelected">
-          {{ ticker }}
+          {{ ticker }} 
         </v-list-tile-title>
       </v-list-tile-content>
     </v-list>

@@ -1,6 +1,10 @@
 <template>
   <div>
     <h3>{{ dispCur }}</h3>
+    <div v-if="userId" class="ml1 pointer" @click="addToWatchlist(dispCur)" style = "font-size:1.5em; cursor: pointer; width:20%;">Add to WatchList</div> <br/>
+    <div>
+        <p>{{ errorMsg }}</p>
+    </div>
     <v-container grid-list-md text-xs-center>
       <v-layout row wrap>
         <v-flex xs4>
@@ -82,6 +86,7 @@
 <script>
   import CandleStickChart from '@/components/CandleStickChart.vue'
   import { GC_BACKEND } from '@/constants/settings.js'
+  import { GC_USER_ID, GC_AUTH_TOKEN } from '@/constants/settings'
 
   export default {
     components: {
@@ -178,12 +183,39 @@
         }, response => {
           console.log("Error");
         });
+      },
+      addToWatchlist: function (dispCur) {
+        console.log(dispCur);
+        console.log("User id: " + localStorage.getItem(GC_USER_ID));
+        var _this = this;
+        this.$http.post(GC_BACKEND + "/user/addTicker", {
+            ticker: dispCur,
+            userID: localStorage.getItem(GC_USER_ID)
+        }, {}).then(response => {
+          var res = response.body;
+          console.log("Got response");
+          if (!res.okay) {
+            //_this.errorMsg = "You have already added the ticker";
+            alert("You have already added the ticker " + dispCur);
+          }
+          else {
+            console.log(dispCur + " Added");
+            alert(dispCur + " has been added to your watch list");
+          }
+
+        }, response => {
+          console.log("Error!");
+        });
+        
       }
     },
     computed: {
       percentStyle: function () {
         return "px0 " + (this.percentChange < 0 ? "neg-percent" : "pos-percent");
-      }
+      },
+       userId () {
+          return localStorage.getItem(GC_USER_ID);
+        }
     },
     watch: {
       dispCur: function(val) {

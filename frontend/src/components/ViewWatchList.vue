@@ -1,33 +1,26 @@
 <template>
 <div>
-<h2>Search For Users</h2>
+<h2>View WatchList</h2>
 
 <form>
   <div class="container">
-    <label><b>Username</b></label>
-    <input type="text" placeholder="Search For Username" v-model="username" required>
-
-    <div class="clearfix">
-      <a href = "/"><button type="button" class="cancelbtn">Cancel</button></a>
-      <button type="submit" @click="onSignup" class="signupbtn">Search</button>
-    </div>
-
+    <div v-if="userId" class="ml1 pointer" @click="onSignup" style = "float:right; font-size:1.5em; cursor: pointer">View currencies</div>
     <div>
       <p>{{ errorMsg }}</p>
     </div>
     
     <ul id="userSearchDisplay">
-	<li v-for="name in userList">
-	  {{ name }}
-	</li>
-</ul>
+		<li v-for="name in userList">
+		  {{ name }}
+		</li>
+	</ul>
   </div>
 </form>
 </div>
 </template>
 
 <script>
-  import { GC_LOGGED_IN, GC_BACKEND } from '@/constants/settings'
+  import { GC_USER_ID, GC_LOGGED_IN, GC_BACKEND } from '@/constants/settings'
   export default {
     data () {
       return {
@@ -36,18 +29,24 @@
         userList: ""
       }
     },
+    computed: {
+      userId () {
+        console.log("In userId function: " + this.$root.$data.userId);
+        console.log("val of gcuserid in localstorage " + localStorage.getItem(GC_USER_ID));
+        //return this.$root.$data.userId
+        return localStorage.getItem(GC_USER_ID);
+      }
+    },
     methods: {
       onSignup: function () {
         var _this = this;
-        this.$http.post(GC_BACKEND + "/user/search", {
-          //params: {
-            username: _this.username
-          //}
+        this.$http.post(GC_BACKEND + "/user/ViewWatchList", {
+            username: localStorage.getItem(GC_USER_ID)
         }, {}).then(response => {
           var res = response.body;
           console.log("Got response");
-          if (res.allUsers) {
-            _this.userList = res.allUsers;
+          if (res.allCurrencies) {
+            _this.userList = res.allCurrencies;
             console.log(_this.userList);
           }
           else {

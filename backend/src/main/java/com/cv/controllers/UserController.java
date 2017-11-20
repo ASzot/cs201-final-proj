@@ -12,13 +12,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cv.AppContext;
 import com.cv.DefaultResponse;
-//import com.cv.UserSearchResponse;
+import com.cv.UserSearchResponse;
 
-import com.cv.jdbc.get.UserSearch;
-import com.cv.jdbc.get.ValidateUser;
-import com.cv.jdbc.set.AddUser;
+// import com.cv.jdbc.get.UserSearch;
+// import com.cv.jdbc.get.ValidateUser;
+// import com.cv.jdbc.set.AddUser;
 import com.cv.model.UserData;
 import com.cv.model.UserSearchData;
+import com.cv.model.AddTicker;
+import com.cv.jdbc.set.*; 
+import com.cv.jdbc.get.*;
+import com.cv.UserWatchListResponse; 
 //import com.cv.model.UserSearchResponse;
 
 @Controller
@@ -52,15 +56,48 @@ public class UserController {
     return new DefaultResponse(okay);
   }
   
- // @CrossOrigin(origins="http://localhost:8080")
- // @RequestMapping(value="/user/search", method=RequestMethod.POST)
- // public @ResponseBody UserSearchResponse createUser(
- //     @RequestBody UserSearchData userSearchData) {
+ @CrossOrigin(origins="http://localhost:8080")
+ @RequestMapping(value="/user/search", method=RequestMethod.POST)
+ public @ResponseBody UserSearchResponse createUser(
+     @RequestBody UserSearchData userSearchData) {
 
- //   System.out.println("Got request to search for user");
- //   UserSearch userSearch = new UserSearch(); 
- //   Vector<String> allUsers = userSearch.searchForSimilarUser(userSearchData.getUsername());
- //   return new UserSearchResponse(allUsers);
- // }
+   System.out.println("Got request to search for user");
+   UserSearch userSearch = new UserSearch(); 
+   Vector<String> allUsers = userSearch.searchForSimilarUser(userSearchData.getUsername());
+   return new UserSearchResponse(allUsers);
+ }
+ 
+ @CrossOrigin(origins="http://localhost:8080")
+ @RequestMapping(value="/user/addTicker", method=RequestMethod.POST)
+ public @ResponseBody DefaultResponse createUser(
+     @RequestBody AddTicker addTicker) {
+   //String parsedTicker = tickerName.substring(11, tickerName.lastIndexOf('"'));
+   WatchListSetters watchListSetters = new WatchListSetters(); 
+   System.out.println("Printing ticker value: " + addTicker.getTicker() + " printing userid value: " + addTicker.getUserID());
+   boolean okay = watchListSetters.addTickerStringToWatchList(addTicker.getUserID(), addTicker.getTicker()); 
+   System.out.print("testing add return value: " + okay);
+   // System.out.println(okay);
+   return new DefaultResponse(okay);
+ }
+
+ @CrossOrigin(origins="http://localhost:8080")
+ @RequestMapping(value="/user/ViewWatchList", method=RequestMethod.POST)
+ public @ResponseBody UserWatchListResponse createUser(
+     @RequestBody String username) {
+   //String parsedTicker = tickerName.substring(11, tickerName.lastIndexOf('"'));
+   WatchListGetters watchListGetters = new WatchListGetters(); 
+   System.out.println("Printing username for viewwatchlist: " + username);
+   //boolean okay = watchListGetters.addTickerStringToWatchList(addTicker.getUserID(), addTicker.getTicker()); 
+   Vector<String> allCurrencies = watchListGetters.getUserWatchListString(username);
+   System.out.println("all currencies size: " + watchListGetters.getUserWatchListString(username).size());
+   for(int i = 0; i < allCurrencies.size(); i++){
+    System.out.println("Following currency: " + allCurrencies.get(i));
+   }
+   //System.out.print("testing add return value: " + okay);
+   // System.out.println(okay);
+   return new UserWatchListResponse(allCurrencies);
+ }
+
+//vector<String> watchListGetters.getUserWatchListString(String username);
 
 }

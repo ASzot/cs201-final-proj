@@ -5,6 +5,7 @@ import Register from '@/components/Register.vue'
 import Login from '@/components/Login.vue'
 import UserSearch from '@/components/UserSearch.vue'
 import UserWatchlistSocketTest from '@/components/UserWatchlistSocketTest.vue'
+import ViewWatchList from '@/components/ViewWatchList.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -34,6 +35,10 @@ export default new Router({
     {
     		path:'/UserWatchlistSocketTest',
     		component: UserWatchlistSocketTest
+    },
+    {
+    		path:'/WatchList',
+    		component: ViewWatchList
     }
   ]
 })
