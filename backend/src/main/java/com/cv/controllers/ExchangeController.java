@@ -2,6 +2,7 @@ package com.cv.controllers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -25,11 +26,9 @@ import com.cv.jdbc.get.GetCurrencyInformation;
 import com.cv.model.CandleStickSeries;
 import com.cv.model.CurrencyTicker;
 import com.cv.model.Market;
-
 import com.cv.model.MarketSummary;
 import com.cv.model.TimeSeries;
 import com.cv.model.TradeSeries;
-import com.cv.movingAverages.Constants;
 import com.cv.movingAverages.MovingAverageCalculator;
 
 @Controller
@@ -113,29 +112,40 @@ public class ExchangeController {
       @RequestParam(value="interval2",required=false) Integer interval2,
       @RequestParam(value="interval3",required=false) Integer interval3,
       @RequestParam(value="exchange", required=true) String exchange,
+      @RequestParam(value="duration",required=true) long duration,
       @RequestParam(value="fromCur", required=true) String fromCur,
       @RequestParam(value="toCur", required=true) String toCur) {
     
-    System.out.println("Got request");
+//    System.out.println("Got request");
     List<Integer> movingAverageIntervals = new ArrayList<Integer>();
     movingAverageIntervals.add(interval1);
     movingAverageIntervals.add(interval2);
     movingAverageIntervals.add(interval3);
     
     //constructor takes in entire graph's duration
-    MovingAverageCalculator movingAverageCalculator = new MovingAverageCalculator(Constants.SIX_MONTHS_UNIX, exchange, movingAverageIntervals, fromCur, toCur); 
+    //can delete!!
+    long beforeUnixTime = System.currentTimeMillis();
+    long currentUnixTime = System.currentTimeMillis() / 1000;
+    
+    if (duration <= 0) {
+      return new HashMap<Integer, TimeSeries>();
+    }
+    MovingAverageCalculator movingAverageCalculator = new MovingAverageCalculator(currentUnixTime, duration, exchange, movingAverageIntervals, fromCur, toCur); 
     Map<Integer, TimeSeries> seriesMap = movingAverageCalculator.getSeries();
     
     for (Integer key : seriesMap.keySet()) {
       TimeSeries intervalSeriesArray = seriesMap.get(key);
-      System.out.println("-------------------------------------------------");
-      System.out.println("-------------------------------------------------");
-      System.out.println("-------------------------------------------------");
+//      System.out.println("-------------------------------------------------");
+//      System.out.println("-------------------------------------------------");
+//      System.out.println("-------------------------------------------------");
       System.out.println("TimeSeriesResponse: for moving interval: " + key + " size: " + intervalSeriesArray.size());
-      intervalSeriesArray.print();
+//      intervalSeriesArray.print();
     }
     
     System.out.println("Got response");
+    long afterUnixTime = System.currentTimeMillis();
+    
+    System.out.println("Time for moving averages: " + (afterUnixTime - beforeUnixTime) / 1000);
     return seriesMap;
   }
 

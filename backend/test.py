@@ -53,12 +53,14 @@ if __name__ == "__main__":
 	#get_endpoint("/exchange/movingAverage?interval=30&fromCur=btc&toCur=usd")
 	
 	## Moving average tests for 6 months
-	print("Moving average test, 6 months")
-	get_endpoint("/exchange/candle?fromCur=btc&toCur=usd&exchange=gdax&period=86400&begin=1495152000&end=1511121015")
+	#print("Moving average test, 6 months")
+	#get_endpoint("/exchange/candle?fromCur=btc&toCur=usd&exchange=gdax&period=86400&begin=1495152000&end=1511121015")
 
-	print("moving averages, 6 months")
-	get_endpoint("/exchange/movingAverage?interval1=30&interval2=40&interval3=50&exchange=gdax&fromCur=btc&toCur=usd")
+	#print("moving averages, 6 months")
+	#get_endpoint("/exchange/movingAverage?interval1=30&interval2=40&interval3=50&exchange=gdax&duration=31556926&fromCur=btc&toCur=usd")
 	
+	print("ERROR CASE")
+	get_endpoint("/exchange/movingAverage?interval1=30&interval2=40&interval3=50&exchange=gdax&duration=10&fromCur=btc&toCur=usd")
 	
 	    #get_endpoint("/exchange/data?fromCur=DOT&toCur=BTC&time=24")
 	#print("Minute candles, 4 hours, yesterday") OLD IMPLEMENTATION

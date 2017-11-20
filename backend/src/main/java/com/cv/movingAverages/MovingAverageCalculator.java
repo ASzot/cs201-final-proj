@@ -1,12 +1,13 @@
 package com.cv.movingAverages;
 
-import java.util.ArrayList; 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.cv.model.MovingAveragePoint;
 import com.cv.model.TimeSeries;
 
 public class MovingAverageCalculator {
@@ -22,26 +23,26 @@ public class MovingAverageCalculator {
   private List<String> dayPeriod; //dummy list to only hold epoch value of 1 day for moving average API Callcalculation
   private Map<Integer, TimeSeries> series;
   private String exchange;
+  private Map<Long, Double> dayPricesCache;
   
-  //ADD EXCHANGE INTO CRYPTOWATCH CALL
-  
-  public MovingAverageCalculator(long duration, String exchange, List<Integer> dayIntervals, String fromCur, String toCur) {
+  public MovingAverageCalculator(long currentUnixTime, long duration, String exchange, List<Integer> dayIntervals, String fromCur, String toCur) {
     series = new HashMap<Integer, TimeSeries>();
     this.dayIntervals = dayIntervals;
     this.duration = duration;
-    this.startGraphTimestamp = System.currentTimeMillis()/1000 - Constants.DAY_UNIX - duration; //graph from 1 year, 1 day ago
-    this.endGraphTimestamp =  System.currentTimeMillis()/1000 - Constants.DAY_UNIX; //to 1 day ago
+    this.startGraphTimestamp = currentUnixTime - duration; //graph from 1 year, 1 day ago
+    this.endGraphTimestamp =  currentUnixTime; //to 1 day ago    - Constants.DAY_UNIX
     this.market = fromCur + toCur;
     dayPeriod = new ArrayList<String>();
     dayPeriod.add(String.valueOf(Constants.DAY_UNIX));
     this.exchange = exchange; 
-    
-    //new MovingAverageCalculator -> only in this function
+    dayPricesCache = new HashMap<Long, Double>();
+
+    //Begin and execute all threads
     ExecutorService executors = Executors.newCachedThreadPool();
     for (Integer interval : dayIntervals) {
       TimeSeries ts = new TimeSeries();
       series.put(interval, ts);
-      MovingAverageThread mat = new MovingAverageThread(exchange, interval, ts, startGraphTimestamp, endGraphTimestamp, fromCur, toCur);
+      MovingAverageThread mat = new MovingAverageThread(exchange, interval, ts, startGraphTimestamp, endGraphTimestamp, fromCur, toCur, dayPricesCache);
       executors.execute(mat);
     }
     executors.shutdown();
@@ -51,8 +52,16 @@ public class MovingAverageCalculator {
   }
 
   public Map<Integer, TimeSeries> getSeries() {
+    //Remove error series
+    for (Integer key : series.keySet()) {
+      if (series.get(key).size() == 1 && ((MovingAveragePoint)(series.get(key).getTimeSeriesPoints().get(0))).getAverage() == 0.0) {
+        series.put(key, new TimeSeries());
+      }
+    }
     return series;
   }
+  
+}
 
 //  //calculates moving averages for one series
 //  public void calculateIntervalSeries(int dayInterval, TimeSeries ts) {
@@ -167,7 +176,7 @@ public class MovingAverageCalculator {
 //    }
 //    return cryptoWatchApi;
 //  }
-}
+
 
 
 //
