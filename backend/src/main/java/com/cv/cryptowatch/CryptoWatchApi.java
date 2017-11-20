@@ -109,6 +109,7 @@ public class CryptoWatchApi {
   public MarketSummary getMarketSummary(String fromCur, String toCur, String exchange, Gson gson) {
     String endpoint = "/markets/" + exchange + "/" + fromCur + toCur + "/summary";
     JsonObject result = rest.get(endpoint);
+    if (result == null) System.out.println("ERROR IN MARKET SUMMARY");
     String jsonStr = result.get("result").getAsJsonObject().toString();
     System.out.println("Json string " + jsonStr);
     return gson.fromJson(jsonStr, MarketSummary.class);

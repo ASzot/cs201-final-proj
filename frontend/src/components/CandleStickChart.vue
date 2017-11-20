@@ -14,7 +14,7 @@
         lastTimestamp: -1,
         dispData: null,
         dispDates: null,
-        dispMVAs: null
+        dispMVAs: null,
         chartUpdateInterval: null,
         waitingForUpdate: false,
         useChart: null,
