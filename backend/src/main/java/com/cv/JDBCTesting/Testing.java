@@ -1,10 +1,12 @@
 package com.cv.JDBCTesting;
 
 import java.util.List;
+import java.util.Vector;
 
 import com.cv.jdbc.*;
 import com.cv.jdbc.get.GetCurrencyInformation;
 import com.cv.jdbc.get.ValidateUser;
+import com.cv.jdbc.get.WatchListGetters;
 import com.cv.jdbc.get.getToFromInformation;
 import com.cv.jdbc.scripts.AddToFromExchangeInCurrencyInfo;
 import com.cv.jdbc.set.WatchListSetters;
@@ -17,11 +19,35 @@ public class Testing {
 	
 	public static void main (String [] Args) {
 		
-		AddToFromExchangeInCurrencyInfo AddToFromExchangeTesting = new AddToFromExchangeInCurrencyInfo();
+		/*WatchListSetters testGetWatchListInt = new WatchListSetters();
+		System.out.println(testGetWatchListInt.addTickerStringToWatchList("testUser1","AMC")); //false
+		System.out.println(testGetWatchListInt.addTickerStringToWatchList("INVALIDUSER","ATM")); //false
+		System.out.println(testGetWatchListInt.addTickerStringToWatchList("TestUser1","ATM"));//false
+		System.out.println(testGetWatchListInt.addTickerStringToWatchList("a","GARBAGE"));//false
+		System.out.println(testGetWatchListInt.addTickerStringToWatchList("a","BTC"));//false
+*/		
+		
+		
+		
+		/*WatchListGetters testGetWatchListInt = new WatchListGetters();
+		Vector<String> myUsersWatchList = testGetWatchListInt.getUserWatchListString("testUser1");
+		for (int i=0; i<myUsersWatchList.size(); i++) {
+			System.out.println("testUser1 watch list " + myUsersWatchList.get(i));
+		}
+		Vector<String> myUsersWatchList1 = testGetWatchListInt.getUserWatchListString("INVALIDUSER");
+		for (int i=0; i<myUsersWatchList1.size(); i++) {
+			System.out.println("INVALIDUSER watch list " + myUsersWatchList1.get(i));
+		}
+		Vector<String> myUsersWatchList2 = testGetWatchListInt.getUserWatchListString("a");
+		for (int i=0; i<myUsersWatchList2.size(); i++) {
+			System.out.println("a watch list " + myUsersWatchList2.get(i));
+		}*/
+		
+		/*AddToFromExchangeInCurrencyInfo AddToFromExchangeTesting = new AddToFromExchangeInCurrencyInfo();
 		
 		List<Market> testingAllMarketsNotThreeCharTickers = AddToFromExchangeTesting.getMarketsWhereToIsThreeChar();
 		System.out.println(testingAllMarketsNotThreeCharTickers.size());
-		
+		*/
 		
 		/*List<Market> testingAllMarkets = gtfi.getAllMarkets();
 		System.out.println(testingAllMarkets.size());*/

@@ -26,7 +26,7 @@ public class ValidateUser {
 				String getID = "SELECT * FROM User WHERE username=?";
 				
 				ps = conn.prepareStatement(getID);
-				ps.setString(2, username);
+				ps.setString(1, username);
 				rs = ps.executeQuery();
 				
 				while(rs.next()) {
