@@ -103,9 +103,15 @@ public class CryptoWatchApi {
       if (!active) {
         continue;
       }
-
-      String fromStr = pair.substring(0, 3);
-      String toStr = pair.substring(3, 6);
+      
+      String fromStr = null;
+      String toStr = null;
+      
+      if(pair.length() == 6) {
+    	  fromStr = pair.substring(0, 3);
+          toStr = pair.substring(3, 6);
+      }
+      
 
       CurrencyTicker from = new CurrencyTicker(-1, fromStr);
       CurrencyTicker to = new CurrencyTicker(-1, toStr);

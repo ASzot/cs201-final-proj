@@ -21,6 +21,10 @@ public class Market {
   public String getToTicker() {
     return this.toCur.getTicker();
   }
+  
+  public String getFromTicker() {
+	  return this.fromCur.getTicker();
+  }
 
   public String getExchange() {
     return this.exchange;

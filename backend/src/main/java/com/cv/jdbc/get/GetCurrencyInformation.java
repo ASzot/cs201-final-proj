@@ -56,6 +56,50 @@ public class GetCurrencyInformation {
 		return allTickersVector;
 	}
 	
+	public boolean isValidCurrencyTicker(String currencyTicker) {
+		Connection conn = ConnectToDB.getDBConnection();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		boolean validCurrencyTicker = false;
+		
+		try {
+			
+			String validationStatement = "SELECT * FROM CurrencyInfo WHERE ticker=?";
+			
+			ps = conn.prepareStatement(validationStatement);
+			ps.setString(1, currencyTicker);
+			rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				String tickerFromDB = rs.getString("ticker");
+
+				if(currencyTicker.equals(tickerFromDB)) {
+					validCurrencyTicker = true;
+					return validCurrencyTicker;
+				}
+			}
+			
+		} catch(Exception e){
+			return validCurrencyTicker;
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (ps != null) {
+					ps.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException sqle) {
+				System.out.println("sqle: " + sqle.getMessage());
+			}
+			
+		}
+		return validCurrencyTicker;
+	}
+	
 	public boolean isValidCurrencyID(int currencyID) {
 		Connection conn = ConnectToDB.getDBConnection();
 		PreparedStatement ps = null;
