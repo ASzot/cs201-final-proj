@@ -61,7 +61,7 @@
             _this.saveUserData();
             console.log("Logged in!");
             // Go back to home page.
-            router.push('/');
+            this.$router.push('/');
           }
 
         }, response => {

@@ -109,6 +109,7 @@ public class ExchangeController {
       @RequestParam(value="interval1",required=true) Integer interval1,
       @RequestParam(value="interval2",required=false) Integer interval2,
       @RequestParam(value="interval3",required=false) Integer interval3,
+      @RequestParam(value="exchange", required=false) String exchange,
       @RequestParam(value="fromCur", required=true) String fromCur,
       @RequestParam(value="toCur", required=true) String toCur) {
     
@@ -119,15 +120,14 @@ public class ExchangeController {
     movingAverageIntervals.add(interval3);
     
     //constructor takes in entire graph's duration
-    MovingAverageCalculator movingAverageCalculator = new MovingAverageCalculator(Constants.SIX_MONTHS_UNIX, fromCur, toCur); 
-    Map<Integer, TimeSeries> seriesMap = movingAverageCalculator.calculateSeries(movingAverageIntervals);
+    MovingAverageCalculator movingAverageCalculator = new MovingAverageCalculator(Constants.SIX_MONTHS_UNIX, movingAverageIntervals, fromCur, toCur); 
+    Map<Integer, TimeSeries> seriesMap = movingAverageCalculator.getSeries();
     
     for (Integer key : seriesMap.keySet()) {
       TimeSeries intervalSeriesArray = seriesMap.get(key);
       System.out.println("-------------------------------------------------");
       System.out.println("-------------------------------------------------");
       System.out.println("-------------------------------------------------");
-
       System.out.println("TimeSeriesResponse: for moving interval: " + key + " size: " + intervalSeriesArray.size());
       intervalSeriesArray.print();
     }

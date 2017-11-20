@@ -27,7 +27,7 @@
         <span>Cryptowatch</span>
 	      </v-toolbar-title>
 	       <div class="flex flex-fixed">
-	 	      <div v-if="userId" class="ml1 pointer" @click="logout()">logout</div>
+	 	      <div v-if="userId" class="ml1 pointer" @click="logout">logout</div>
 	 	      <div v-else>
 	 		      <router-link v-if= "$route.path != '/login'"  to="/login" class="ml1 no-underline">login</router-link>
 	 		      <router-link v-if= "$route.path != '/register'"  to="/register" class="ml1 no-underline">register</router-link>
@@ -57,10 +57,12 @@
       CurrencyView, SideBarMenu, CurrencyListView
     },
     methods: {
-      logout () {
+      logout: function () {
         localStorage.removeItem(GC_USER_ID);
         localStorage.removeItem(GC_AUTH_TOKEN);
-        this.$root.$data.userId = localStorage.getItem(GC_USER_ID);
+        this.$root.$data.userId = null;
+        console.log("logout function called");
+        this.$forceUpdate(); 
       },
       navToMain: function () {
         this.navBarState = 'main';
@@ -84,7 +86,10 @@
     },
     computed: {
         userId () {
-          return this.$root.$data.userId
+          console.log("In userId function: " + this.$root.$data.userId);
+          console.log("val of gcuserid in localstorage " + localStorage.getItem(GC_USER_ID));
+          //return this.$root.$data.userId;
+          return localStorage.getItem(GC_USER_ID);
         }
     },
     data: () => ({
