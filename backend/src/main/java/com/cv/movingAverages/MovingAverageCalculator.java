@@ -72,27 +72,20 @@ public class MovingAverageCalculator {
   private void fillDayPriceCache(long startInterval, long endInterval) {
     CandleStickSeries candles = getCrypowatchApi().getCandlestick(market, exchange, dayPeriod, endInterval, startInterval);
     if (candles == null) return;
-    Double intervalSum = 0.0;
-    long currentTimestamp = startInterval;
     TimeSeries ts = candles.getPeriods().get(Constants.DAY_UNIX);
     List<TimeSeriesPoint> points = ts.getTimeSeriesPoints();
     
     for (TimeSeriesPoint point : points) {
       if (point instanceof CandleStickPoint) {
         CandleStickPoint csp = (CandleStickPoint)point;
-        intervalSum += csp.getClose();
         dayPricesCache.add(csp.getClose());
       }
-      else {
-        intervalSum += 0;
-      }
-      currentTimestamp = nextDay(currentTimestamp);
     }
   }
   
-  private Long nextDay(Long timestamp) {
-    return timestamp + Constants.DAY_UNIX;
-  }
+//  private Long nextDay(Long timestamp) {
+//    return timestamp + Constants.DAY_UNIX;
+//  }
   
   private CryptoWatchApi getCrypowatchApi() {
     if (cryptoWatchApi == null) {
