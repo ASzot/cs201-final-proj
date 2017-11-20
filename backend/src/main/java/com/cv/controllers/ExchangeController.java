@@ -1,11 +1,11 @@
 package com.cv.controllers;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -108,20 +108,16 @@ public class ExchangeController {
   @CrossOrigin(origins="http://localhost:8080")
   @RequestMapping(value="/exchange/movingAverage", method=RequestMethod.GET)
   public @ResponseBody Map<Integer, TimeSeries> getMovingAverage(
-      @RequestParam(value="interval1",required=true) Integer interval1,
-      @RequestParam(value="interval2",required=false) Integer interval2,
-      @RequestParam(value="interval3",required=false) Integer interval3,
+      @RequestParam(value="intervals",required=true) String intervals,
       @RequestParam(value="exchange", required=true) String exchange,
       @RequestParam(value="duration",required=true) long duration,
       @RequestParam(value="fromCur", required=true) String fromCur,
       @RequestParam(value="toCur", required=true) String toCur) {
-    
-//    System.out.println("Got request");
-    List<Integer> movingAverageIntervals = new ArrayList<Integer>();
-    movingAverageIntervals.add(interval1);
-    movingAverageIntervals.add(interval2);
-    movingAverageIntervals.add(interval3);
-    
+
+    List<String> intervalStrs = Arrays.asList(intervals.split(","));
+
+    List<Integer> movingAverageIntervals = intervalStrs.stream().map(i -> Integer.valueOf(i)).collect(Collectors.toList());
+
     //constructor takes in entire graph's duration
     //can delete!!
     long beforeUnixTime = System.currentTimeMillis();

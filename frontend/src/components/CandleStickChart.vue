@@ -14,6 +14,7 @@
         lastTimestamp: -1,
         dispData: null,
         dispDates: null,
+        dispMVAs: [],
         chartUpdateInterval: null,
         waitingForUpdate: false,
         useChart: null,
@@ -33,6 +34,37 @@
         console.log("Setting chart options");
         if (this.useChart == null) {
           this.useChart = echarts.init(document.getElementById('main'));
+        }
+        var useSeries = [{
+            type: 'candlestick',
+            name: 'Prices',
+            data: this.dispData,
+            itemStyle: {
+                normal: {
+                    color: '#FD1050',
+                    color0: '#0CF49B',
+                    borderColor: '#FD1050',
+                    borderColor0: '#0CF49B'
+                }
+            }
+        }];
+
+        for (var i in this.dispMVAs) {
+          var dispMVA = this.dispMVAs[i];
+          console.log("Adding");
+          console.log(dispMVA);
+          useSeries.push({
+            name: dispMVA.title,
+            type: 'line',
+            data: dispMVA.data,
+            smooth: true,
+            showSymbol: false,
+            lineStyle: {
+                normal: {
+                    width: 1
+                }
+            }
+          });
         }
         var option = {
           title: {
@@ -81,19 +113,7 @@
             bottom: '15%'
           },
           animation: false,
-          series: [{
-            type: 'candlestick',
-            name: 'Prices',
-            data: this.dispData,
-            itemStyle: {
-                normal: {
-                    color: '#FD1050',
-                    color0: '#0CF49B',
-                    borderColor: '#FD1050',
-                    borderColor0: '#0CF49B'
-                }
-            }
-          }]
+          series: useSeries
         };
 
         this.useChart.setOption(option);
@@ -194,13 +214,50 @@
           _this.lastTimestamp = points[points.length - 1].timestamp;
           _this.dispData = _this.getPointData(points)
           _this.dispDates = _this.getDateData(points);
+          
+          _this.getMVA(dataStart, function () {
+            _this.setChartOptions();
 
-          _this.setChartOptions();
-
-          _this.setUpdateInterval();
+            _this.setUpdateInterval();
+          });
         }, response => {
           console.log("failure");
           console.log(response);
+        });
+      },
+      getMVA: function(dataStart, onComplete) {
+        var _this = this;
+        this.$http.get(GC_BACKEND + "/exchange/movingAverage", {
+          params: {
+            intervals: "5",
+            exchange: this.market,
+            duration: dataStart,
+            fromCur: this.dispCur,
+            toCur: this.toCur
+          }
+        }, {}).then(response => {
+          var res = response.body;
+
+          var keys = Object.keys(res);
+          console.log(res);
+          console.log(keys);
+
+          for (var i in keys) {
+            var key = keys[i];
+            console.log("Pushing " + key);
+
+            var points = _this._.map(res[key].timeSeriesPoints, function (p) {
+              return +p.average;
+            });
+
+            _this.dispMVAs.push({
+              title: key + ' MVA',
+              data: points
+            });
+          }
+          onComplete();
+        }, response => {
+          console.log("Error!");
         });
       }
     },
