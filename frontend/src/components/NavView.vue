@@ -27,7 +27,7 @@
         <span>Cryptowatch</span>
 	      </v-toolbar-title>
 	       <div class="flex flex-fixed">
-	 	      <div v-if="userId" class="ml1 pointer" @click="logout" style = "float:right;">logout</div>
+	 	      <div v-if="userId" class="ml1 pointer" @click="logout" style = "float:right; font-size:1.5em; cursor: pointer">logout</div>
 	 	      <div v-else>
 	 		      <router-link v-if= "$route.path != '/login'"  to="/login" class="ml1 no-underline">login</router-link>
 	 		      <router-link v-if= "$route.path != '/register'"  to="/register" class="ml1 no-underline">register</router-link>
@@ -62,9 +62,15 @@
         localStorage.removeItem(GC_AUTH_TOKEN);
         this.$root.$data.userId = null;
         console.log("logout function called");
+<<<<<<< HEAD
         //this.$forceUpdate(); 
         //reload component
         //Object.assign(this.$data, this.$options.data.call(this));
+=======
+        console.log("before reloadsfd call");
+      	window.location.reload(true);
+      	console.log("after reload call");
+>>>>>>> 8d5dbf486eec8e9e6f0be51db0881f0a907dd4df
       },
       navToMain: function () {
         this.navBarState = 'main';
