@@ -37,12 +37,17 @@
     },
     methods: {
       onLogin: function () {
+      	//this.$router.push('/');
+      	console.log("before reload call");
+      	window.location.reload(true);
+      	console.log("after reload call");
         var _this = this;
+        console.log("usadsfername: " + _this.username + " password: " + _this.pass);
         this.$http.post(GC_BACKEND + "/user/login", {
-          params: {
+          //params: {
             username: _this.username,
-            password: _this.password
-          }
+            password: _this.pass
+          //}
         }, {}).then(response => {
           var res = response.body;
           console.log("Got response");
