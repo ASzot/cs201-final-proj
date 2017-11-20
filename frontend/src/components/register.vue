@@ -43,12 +43,12 @@
           this.errorMsg = "Passwords do not match";
           return;
         }
-
         var _this = this;
+        console.log("username: " + _this.username + " password: " + _this.pass);
         this.$http.post(GC_BACKEND + "/user/create", {
           params: {
             username: _this.username,
-            password: _this.password
+            password: _this.pass
           }
         }, {}).then(response => {
           var res = response.body;
