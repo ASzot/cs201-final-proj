@@ -4,9 +4,9 @@ public class Main {
 	
 	public static void main (String [] Args) {
 			
-		/*AddToFromExchangeInCurrencyInfo script = new AddToFromExchangeInCurrencyInfo();
-		script.AddAllThreeCharTickers();*/
-		
+		AddToFromExchangeInCurrencyInfo script = new AddToFromExchangeInCurrencyInfo();
+		//script.AddAllThreeCharTickers();
+		//script.AddAllMarketsWhereToIsThreeChar();
 		
 	}
 

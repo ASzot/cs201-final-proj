@@ -17,10 +17,14 @@ public class Testing {
 	
 	public static void main (String [] Args) {
 		
-		getToFromInformation gtfi = new getToFromInformation();
-		List<Market> testingAllMarkets = gtfi.getAllMarkets();
+		AddToFromExchangeInCurrencyInfo AddToFromExchangeTesting = new AddToFromExchangeInCurrencyInfo();
 		
-		System.out.println(testingAllMarkets.size());
+		List<Market> testingAllMarketsNotThreeCharTickers = AddToFromExchangeTesting.getMarketsWhereToIsThreeChar();
+		System.out.println(testingAllMarketsNotThreeCharTickers.size());
+		
+		
+		/*List<Market> testingAllMarkets = gtfi.getAllMarkets();
+		System.out.println(testingAllMarkets.size());*/
 		
 		
 		/*ValidateUser myUser = new ValidateUser();
