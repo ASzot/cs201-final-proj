@@ -43,10 +43,10 @@
         this.$http.post(GC_BACKEND + "/user/ViewWatchList", {
             username: localStorage.getItem(GC_USER_ID)
         }, {}).then(response => {
-          var res = response.body;
-          console.log("Got response: " + response);
-          if (res.allCurrencies) {
-            _this.userList = res.allCurrencies;
+          var res = response["body"];
+          console.log("Got response: " + res[0]);
+          if (res) {
+            _this.userList = res;
             console.log(_this.userList);
           }
           else {
