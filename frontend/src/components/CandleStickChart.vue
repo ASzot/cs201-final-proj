@@ -229,7 +229,7 @@
         var _this = this;
         this.$http.get(GC_BACKEND + "/exchange/movingAverage", {
           params: {
-            intervals: "5",
+            intervals: "20", //use 20 for optimal BTC moving Average
             exchange: this.market,
             duration: dataStart,
             fromCur: this.dispCur,
