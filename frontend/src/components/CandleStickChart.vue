@@ -27,7 +27,8 @@
       'toCur',
       'market',
       'dataPeriod',
-      'dataStart'
+      'dataStart',
+      'mvas'
     ],
     methods: {
       setChartOptions: function() {
@@ -35,6 +36,10 @@
         if (this.useChart == null) {
           this.useChart = echarts.init(document.getElementById('main'));
         }
+        else {
+          this.useChart.clear();
+        }
+
         var useSeries = [{
             type: 'candlestick',
             name: 'Prices',
@@ -226,10 +231,14 @@
         });
       },
       getMVA: function(dataStart, onComplete) {
+        this.dispMVAs = []
+
+        var mvasStr = this._.join(this.mvas, ',');
+        console.log("Setting mvas to " + mvasStr);
         var _this = this;
         this.$http.get(GC_BACKEND + "/exchange/movingAverage", {
           params: {
-            intervals: "20", //use 20 for optimal BTC moving Average
+            intervals: mvasStr, //use 20 for optimal BTC moving Average
             exchange: this.market,
             duration: dataStart,
             fromCur: this.dispCur,
@@ -239,9 +248,6 @@
           var res = response.body;
 
           var keys = Object.keys(res);
-          console.log(res);
-          console.log(keys);
-
           for (var i in keys) {
             var key = keys[i];
             console.log("Pushing " + key);
@@ -262,6 +268,13 @@
       }
     },
     watch: {
+      mvas: function (val) {
+        // Update moving averages on the chart
+        var _this = this;
+        this.getMVA(this.dataStart, function () {
+          _this.setChartOptions();
+        });
+      }
     },
     destroyed: function() {
       clearInterval(this.chartUpdateInterval);

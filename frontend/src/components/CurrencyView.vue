@@ -71,6 +71,8 @@
       </v-layout>
     </v-container>
 
+    <period-picker :mvas="mvas"></period-picker>
+
     <candle-stick-chart 
       v-bind:shouldUpdateGraph="shouldUpdate" 
       v-bind:dispCur="dispCur"
@@ -78,6 +80,7 @@
       v-bind:market="useMarket"
       v-bind:dataPeriod="selectedDataPeriod.val"
       v-bind:dataStart="selectedDataStart.val"
+      v-bind:mvas="mvas"
       >
     </candle-stick-chart>
   </div>
@@ -85,19 +88,24 @@
 
 <script>
   import CandleStickChart from '@/components/CandleStickChart.vue'
+  import PeriodPicker from '@/components/PeriodPicker.vue'
   import { GC_BACKEND } from '@/constants/settings.js'
   import { GC_USER_ID, GC_AUTH_TOKEN } from '@/constants/settings'
 
   export default {
     components: {
-      CandleStickChart
+      CandleStickChart, PeriodPicker
     },
     props: [
       'dispCur'
     ],
     data () {
       return {
+        // Configure data start
         selectedDataStart: { text: '1 month', val: "2629743" },
+        errorMsg: "",
+        // Configure starting moving averages
+        mvas: [4, 10],
         possDataStarts: [
           { text: '30 mins', val:'1800' },
           { text: '1 hr', val:'3600' },
@@ -107,6 +115,7 @@
           { text: '6 months', val:'15778458' },
           { text: '1 year', val:'31556926' },
         ],
+        // Configure starting day period
         selectedDataPeriod: { text: '1 day', val: '86400' },
         possDataPeriods: [
           { text: '1 min', val: '60' },
@@ -195,7 +204,7 @@
           var res = response.body;
           console.log("Got response");
           if (!res.okay) {
-            //_this.errorMsg = "You have already added the ticker";
+            _this.errorMsg = "You have already added the ticker";
             alert("You have already added the ticker " + dispCur);
           }
           else {
@@ -241,7 +250,7 @@
   }
 </script>
 
-<style scoped>
+<style>
   .neg-percent {
     color: #e74c3c;
   }

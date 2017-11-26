@@ -1,6 +1,7 @@
 package com.cv.controllers;
 
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,7 +117,16 @@ public class ExchangeController {
 
     List<String> intervalStrs = Arrays.asList(intervals.split(","));
 
-    List<Integer> movingAverageIntervals = intervalStrs.stream().map(i -> Integer.valueOf(i)).collect(Collectors.toList());
+    List<Integer> movingAverageIntervals = new ArrayList<Integer>();
+    for (String intervalStr : intervalStrs) {
+      try {
+        Integer addVal = Integer.valueOf(intervalStr);
+        movingAverageIntervals.add(addVal);
+      }
+      catch (NumberFormatException nfe) {
+        // Just ignore
+      }
+    }
 
     //constructor takes in entire graph's duration
     //can delete!!
