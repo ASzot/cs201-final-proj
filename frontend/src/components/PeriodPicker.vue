@@ -1,11 +1,13 @@
 <template>
   <div>
-    <v-container fluid>
+    <div class="text-xs-center">
+      <v-btn round color="primary" dark @click="onShow">{{ showMsg }}</v-btn>
+    </div>
+    <v-container v-if="shouldShow" fluid>
       <v-layout row wrap>
-        <v-flex xs6>
+        <v-flex xs12>
           <v-card class='card-pad' style='text-align: center'>
             <v-btn color="success" @click="addMVA">Add Moving Average</v-btn>
-            <v-btn color="info" @click="applyMVA">Apply</v-btn>
           </v-card>
         </v-flex>
         <v-flex xs6 v-for="(mva, index) in mvas" :key="index">
@@ -23,18 +25,26 @@
 export default {
   data () {
     return {
+      showMsg: "Show Moving Average Options",
+      shouldShow: false,
     }
   },
   props: ['mvas'],
   methods: {
+    onShow: function () {
+      this.shouldShow = !this.shouldShow;
+      if (this.shouldShow) {
+        this.showMsg = "Hide Moving Average Options";
+      }
+      else {
+        this.showMsg = "Show Moving Average Options";
+      }
+    },
     addMVA: function () {
-      console.log("Adding new MVA");
-      this.mvas.push(5);
+      this.mvas.push("");
     },
     removeMVA: function (index) {
       this.mvas.splice(index, 1);
-    },
-    applyMVA: function () {
     }
   }
 }

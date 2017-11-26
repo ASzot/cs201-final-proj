@@ -6,6 +6,7 @@ import Login from '@/components/Login.vue'
 import UserSearch from '@/components/UserSearch.vue'
 import UserWatchlistSocketTest from '@/components/UserWatchlistSocketTest.vue'
 import ViewWatchList from '@/components/ViewWatchList.vue'
+import OrderBook from '@/components/OrderBook.vue'
 Vue.use(Router)
 
 export default new Router({

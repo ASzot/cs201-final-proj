@@ -1,16 +1,18 @@
 <template>
-  <v-list dense>
-    <v-list-tile v-for="item in items" :key="item.text">
-      <v-list-tile-action>
-        <v-icon>{{ item.icon }}</v-icon>
-      </v-list-tile-action>
-      <v-list-tile-content>
-        <v-list-tile-title @click="onItemSelected">
-          {{ item.text }}
-        </v-list-tile-title>
-      </v-list-tile-content>
-    </v-list-tile>
-  </v-list>
+  <div>
+    <v-list dense>
+      <v-list-tile v-for="item in items" :key="item.text">
+        <v-list-tile-action>
+          <v-icon>{{ item.icon }}</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-content>
+          <v-list-tile-title @click="onItemSelected">
+            {{ item.text }}
+          </v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
+    </v-list>
+  </div>
 </template>
 
 <script>
@@ -28,9 +30,8 @@
         		this.$router.push("/WatchList");
         }
         else {
-          console.log("Invalid element clicked!");
-          console.log(innerText);
-          alert("Please login or create an account to use this feature.");
+          this.snackbar = true;
+          this.$emit("showError", "You need to be logged in to perform this action");
         }
       }
     },

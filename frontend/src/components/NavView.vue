@@ -13,7 +13,7 @@
       v-model="drawer" >
       
       <div v-if="navBarState == 'main'">
-        <side-bar-menu v-on:navToCurrency="navToCurrency"></side-bar-menu>
+        <side-bar-menu @showError="showError" v-on:navToCurrency="navToCurrency"></side-bar-menu>
       </div>
       <div v-if="navBarState == 'currency'">
         <v-btn block color="secondary" @click="navToMain" dark>Back</v-btn>
@@ -21,7 +21,7 @@
       </div>
 
     </v-navigation-drawer>
-    <v-toolbar class="blue">
+    <v-toolbar dark color="blue">
       <v-toolbar-title>
         <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
         <span>Cryptowatch</span>
@@ -29,7 +29,8 @@
 	       <div class="flex flex-fixed">
 	 	      <div v-if="userId" class="ml1 pointer" @click="logout" style = "float:right; font-size:1.5em; cursor: pointer">logout</div>
 	 	      <div v-else>
-	 		      <router-link v-if= "$route.path != '/login'"  to="/login" class="ml1 no-underline">login</router-link>
+	 		      <router-link v-if= "$route.path != '/login'"  to="/login"
+              class="ml1 no-underline">login</router-link>
 	 		      <router-link v-if= "$route.path != '/register'"  to="/register" class="ml1 no-underline">register</router-link>
 	 	      </div>
 	 	   </div>
@@ -43,6 +44,15 @@
         </v-layout>
       </v-container>
     </main>
+
+    <v-snackbar
+      :timeout="6000"
+      :top="true"
+      v-model="snackbar">
+      {{ errorMsg }}
+      <v-btn flat color="green" @click.native="$router.push('/login')">Login</v-btn>
+      <v-btn flat color="pink" @click.native="snackbar = false">Close</v-btn>
+    </v-snackbar>
   </v-app>
 </template>
 
@@ -57,6 +67,10 @@
       CurrencyView, SideBarMenu, CurrencyListView
     },
     methods: {
+      showError: function (message) {
+        this.errorMsg = message;
+        this.snackbar = true;
+      },
       logout: function () {
         localStorage.removeItem(GC_USER_ID);
         localStorage.removeItem(GC_AUTH_TOKEN);
@@ -99,6 +113,8 @@
       }
     },
     data: () => ({
+      snackbar: false,
+      errorMsg: "",
       drawer: true,
       navBarState: 'main',
     }),
@@ -124,7 +140,7 @@
     margin-left: 300px;
   }
   .ml1:link{
-  	color: black !important; 
+  	color: white !important; 
   	text-decoration: none; 
   	float: right; 
   	padding: 5px; 
@@ -132,9 +148,9 @@
   	
   }
   .ml1:visited{
-  	color:black; 
+  	color:white; 
   }
   .ml1:hover{
-  	color: white; 
+  	color: black; 
   }
 </style>

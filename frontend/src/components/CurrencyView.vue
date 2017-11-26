@@ -71,8 +71,6 @@
       </v-layout>
     </v-container>
 
-    <period-picker :mvas="mvas"></period-picker>
-
     <candle-stick-chart 
       v-bind:shouldUpdateGraph="shouldUpdate" 
       v-bind:dispCur="dispCur"
@@ -83,18 +81,27 @@
       v-bind:mvas="mvas"
       >
     </candle-stick-chart>
+
+    <period-picker :mvas="mvas"></period-picker>
+
+    <div class="text-xs-center">
+      <v-btn round color="primary" dark @click="onShowOrderBook">{{ orderBookMsg }}</v-btn>
+    </div>
+
+    <order-book v-if="showOrderBook" :fromCurrency="dispCur"></order-book>
   </div>
 </template>
 
 <script>
   import CandleStickChart from '@/components/CandleStickChart.vue'
   import PeriodPicker from '@/components/PeriodPicker.vue'
+  import OrderBook from '@/components/OrderBook.vue'
   import { GC_BACKEND } from '@/constants/settings.js'
   import { GC_USER_ID, GC_AUTH_TOKEN } from '@/constants/settings'
 
   export default {
     components: {
-      CandleStickChart, PeriodPicker
+      CandleStickChart, PeriodPicker, OrderBook
     },
     props: [
       'dispCur'
@@ -104,6 +111,8 @@
         // Configure data start
         selectedDataStart: { text: '1 month', val: "2629743" },
         errorMsg: "",
+        showOrderBook: false,
+        orderBookMsg: "Show Order Book",
         // Configure starting moving averages
         mvas: [4, 10],
         possDataStarts: [
@@ -138,6 +147,15 @@
       }
     },
     methods: {
+      onShowOrderBook: function () {
+        this.showOrderBook = !this.showOrderBook;
+        if (this.showOrderBook) {
+          this.orderBookMsg = "Hide Order Book";
+        }
+        else {
+          this.orderBookMsg = "Show Order Book";
+        }
+      },
       displaySummary: function () {
         var _this = this;
         this.$http.get(GC_BACKEND + "/exchange/summary", {
