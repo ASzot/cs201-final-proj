@@ -1,4 +1,4 @@
-package com.cv;
+package com.cv.response;
 
 public class DefaultResponse {
   private String msg;

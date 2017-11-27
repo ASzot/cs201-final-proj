@@ -11,9 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cv.AppContext;
-import com.cv.DefaultResponse;
-import com.cv.UserSearchResponse;
-
 // import com.cv.jdbc.get.UserSearch;
 // import com.cv.jdbc.get.ValidateUser;
 // import com.cv.jdbc.set.AddUser;
@@ -22,8 +19,10 @@ import com.cv.model.UserSearchData;
 import com.cv.model.AddTicker;
 import com.cv.jdbc.set.*; 
 import com.cv.jdbc.get.*;
-import com.cv.UserWatchListResponse; 
+import com.cv.response.DefaultResponse;
 //import com.cv.model.UserSearchResponse;
+import com.cv.response.UserSearchResponse;
+import com.cv.response.UserWatchListResponse;
 
 @Controller
 public class UserController {
@@ -82,7 +81,7 @@ public class UserController {
 
  @CrossOrigin(origins="http://localhost:8080")
  @RequestMapping(value="/user/ViewWatchList", method=RequestMethod.POST)
- public @ResponseBody Vector<String> createUser(
+ public @ResponseBody Vector<String> getWatchList(
      @RequestBody String username) {
    //String parsedTicker = tickerName.substring(11, tickerName.lastIndexOf('"'));
    WatchListGetters watchListGetters = new WatchListGetters(); 
@@ -102,6 +101,12 @@ public class UserController {
     //return allStringCurrency; 
     return allCurrencies; 
  }
+
+ //@CrossOrigin(origins="http://localhost:8080")
+ //@RequestMapping(value="/user/removeWatchlist", method=RequestMethod.POST)
+ //public @ResponseBody boolean removeFromWatchlist(@RequestBody WatchlistRemove watchListRemove) {
+ // 
+ //}
 
 //vector<String> watchListGetters.getUserWatchListString(String username);
 

@@ -81,7 +81,7 @@ public class ExchangeController {
 
     System.out.println("Got response");
 
-	return candles;
+    return candles;
   }
   
   

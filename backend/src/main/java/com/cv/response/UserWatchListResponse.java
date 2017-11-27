@@ -1,4 +1,4 @@
-package com.cv;
+package com.cv.response;
 import java.util.Vector;
 
 public class UserWatchListResponse {
@@ -15,5 +15,4 @@ public class UserWatchListResponse {
   public void setCurrencies(Vector<String> allCurrencies){
     this.allCurrencies = allCurrencies; 
   }
- 
 }
