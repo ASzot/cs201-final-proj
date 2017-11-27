@@ -41,6 +41,9 @@ public class UserController {
     System.out.println("Username and password in login controller: " + userData.getUsername() + " and the password is: " + userData.getPassword());
     boolean okay = validateUser.validateUsernameAndPassword(userData.getUsername(), userData.getPassword());
     System.out.println("Testing boolean: " + okay);
+    if(okay == true){
+      allWatchLists = new Vector<String>(); 
+    }
     return new DefaultResponse(okay);
   }
 
