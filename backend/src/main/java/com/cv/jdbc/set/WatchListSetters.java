@@ -35,12 +35,13 @@ public class WatchListSetters {
 	public boolean addTickerIDWatchList(int userID, int currencyID) {
 		Connection conn = ConnectToDB.getDBConnection();
 		boolean added = false;
-		ValidateUser validateUserID = new ValidateUser();
-		GetCurrencyInformation validateCurrencyID = new GetCurrencyInformation();
+		//ValidateUser validateUserID = new ValidateUser();
+		//GetCurrencyInformation validateCurrencyID = new GetCurrencyInformation();
 		WatchListGetters myWatchListData = new WatchListGetters();
 		
-		
-		if((validateUserID.isValidUserID(userID))&&(validateCurrencyID.isValidCurrencyID(currencyID))&&(!myWatchListData.isAlreadyInWatchList(userID, currencyID))) {
+		//Code to check user and currency are valid -> slowed down operaton too much so out for now!!
+		//if((validateUserID.isValidUserID(userID))&&(validateCurrencyID.isValidCurrencyID(currencyID))&&(!myWatchListData.isAlreadyInWatchList(userID, currencyID))) {
+		if((!myWatchListData.isAlreadyInWatchList(userID, currencyID))) {
 			try {
 				String insertStatement = "INSERT INTO UserWatchList" 
 														+"(userID, currencyID) VALUES"

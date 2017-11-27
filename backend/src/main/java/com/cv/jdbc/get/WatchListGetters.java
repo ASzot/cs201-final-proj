@@ -31,7 +31,7 @@ public class WatchListGetters {
 		Connection conn = ConnectToDB.getDBConnection();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		ValidateUser usernameValidation = new ValidateUser();
+	//	ValidateUser usernameValidation = new ValidateUser();
 		
 		Vector<Integer> myUsersWatchList = new Vector<Integer>();
 		
@@ -40,7 +40,7 @@ public class WatchListGetters {
 		//System.out.println(username);
 		//System.out.println(userID);
 		
-		if(usernameValidation.isExistingUsername(username)) {
+	//	if(usernameValidation.isExistingUsername(username)) { Took out username validation for speeds sake
 			try {
 				
 				String watchListStatement = "SELECT * FROM UserWatchList WHERE userID = ?";
@@ -75,7 +75,7 @@ public class WatchListGetters {
 					System.out.println("sqle: " + sqle.getMessage());
 				}					
 			}
-		}
+		//}
 		return myUsersWatchList;
 	}
 	
