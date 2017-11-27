@@ -38,7 +38,7 @@
     data: () => ({
       items: [
         { icon: 'trending_up', text: 'Currencies', onClick:'onCurrency' },
-        { icon: 'list' , text: 'UserWatchList'}
+        //{ icon: 'list' , text: 'UserWatchList'}
       ]
     })
   }

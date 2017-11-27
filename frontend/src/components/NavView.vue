@@ -19,7 +19,9 @@
         <v-btn block color="secondary" @click="navToMain" dark>Back</v-btn>
         <currency-list-view v-on:changeDispCur="changeDispCur"></currency-list-view>
       </div>
-
+    <div v-if="userId">
+		<ViewWatchList></ViewWatchList>
+	</div>
     </v-navigation-drawer>
     <v-toolbar dark color="blue">
       <v-toolbar-title>
@@ -61,10 +63,11 @@
   import SideBarMenu from '@/components/SideBarMenu.vue'
   import CurrencyListView from '@/components/CurrencyListView.vue'
   import { GC_USER_ID, GC_AUTH_TOKEN } from '@/constants/settings'
+  import ViewWatchList from '@/components/ViewWatchList.vue'
   
   export default {
     components: {
-      CurrencyView, SideBarMenu, CurrencyListView
+      CurrencyView, SideBarMenu, CurrencyListView, ViewWatchList
     },
     methods: {
       showError: function (message) {

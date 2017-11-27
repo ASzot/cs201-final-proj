@@ -1,6 +1,6 @@
 <template>
 <div>
-<h2 style = "text-align: center; margin-top: 5%;">View WatchList</h2>
+<h5 style = "text-align: center; margin-top: 5%;">WatchList</h5>
 
 <p v-if="!userId">Please create an account or login to access the watchlist feature.</p>
 
@@ -10,11 +10,11 @@
       <p>{{ errorMsg }}</p>
     </div>
     
-    <ul id="userSearchDisplay" v-if="userId">
+    <ul id="userSearchDisplay" v-if="userId" style = "margin-top:-10%; margin-left: 5%;">
 		<li v-for="name in userList" style = "font-size: 1.5em;">
 		  {{ name }}
 		</li>
-		<a href = "/" style = "font-size: 1.5em">Home</a>
+		<!--<a href = "/" style = "font-size: 1.5em">Home</a>-->
 		
 	</ul>
   </div>
