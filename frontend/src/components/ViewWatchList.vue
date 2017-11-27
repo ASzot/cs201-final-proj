@@ -1,6 +1,6 @@
 <template>
 <div>
-<h2 style = "text-align: center; margin-top: 5%;">View WatchList</h2>
+<h5 style = "text-align: center; margin-top: 5%;">WatchList</h5>
 
 <p v-if="!userId">Please create an account or login to access the watchlist feature.</p>
 

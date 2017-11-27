@@ -230,6 +230,7 @@
           else {
             console.log(dispCur + " Added");
             alert(dispCur + " has been added to your watch list");
+            location.reload();
           }
 
         }, response => {
