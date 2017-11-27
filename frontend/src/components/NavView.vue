@@ -39,7 +39,8 @@
       <v-container>
         <v-layout>
           <v-flex xs12 id="content-space">
-            <currency-view v-bind:dispCur="dispCur"></currency-view>
+            <currency-view v-if="dispType=='cur'" v-bind:dispCur="dispCur"></currency-view>
+            <view-watch-list v-if="dispType=='watchlist'"></view-watch-list>
           </v-flex>
         </v-layout>
       </v-container>
@@ -60,12 +61,14 @@
   import CurrencyView from '@/components/CurrencyView.vue'
   import SideBarMenu from '@/components/SideBarMenu.vue'
   import CurrencyListView from '@/components/CurrencyListView.vue'
+  import ViewWatchList from '@/components/ViewWatchList.vue'
   import { GC_USER_ID, GC_AUTH_TOKEN } from '@/constants/settings'
   
   export default {
     components: {
-      CurrencyView, SideBarMenu, CurrencyListView
+      CurrencyView, SideBarMenu, CurrencyListView, ViewWatchList
     },
+    props: ['dispType'],
     methods: {
       showError: function (message) {
         this.errorMsg = message;

@@ -1,27 +1,24 @@
 <template>
-    <div>
-        <h2 style = "text-align:center; margin-top: 3%;">Login Form</h2>
+  <div>
+    <h2 style = "text-align:center; margin-top: 3%;">Login Form</h2>
+    <div class="container" style = "text-align:center; margin-top: 3%;">
+      <label><b>Username</b></label>
+      <input type="text" placeholder="Enter Username" v-model="username" required>
 
-        <form>                  
-          <div class="container" style = "text-align:center; margin-top: 3%;">
-            <label><b>Username</b></label>
-		    <input type="text" placeholder="Enter Username" v-model="username" required>
-		
-		    <label><b>Password</b></label>
-		    <input type="password" placeholder="Enter Password" v-model="pass" required>
-                        
-             <div class="clearfix" style = "padding: 30px;">
-		      <a href = "/"><button type="button" class="cancelbtn" style = "padding: 10px;">Cancel</button></a>
-		      <button type="submit" @click="onLogin" class="signupbtn" style = "padding: 10px;">Login</button>
-		    </div>
-		
-		    <div>
-		      <p>{{ errorMsg }}</p>
-		    </div>
-          </div>
-        </form>
-        
+      <label><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" v-model="pass" required>
+
+      <div class="clearfix" style = "padding: 30px;">
+        <a href = "/"><button type="button" class="cancelbtn" style = "padding: 10px;">Cancel</button></a>
+        <button type="submit" @click="onLogin" class="signupbtn" style = "padding: 10px;">Login</button>
+      </div>
+
+      <v-alert v-if="errorMsg != ''" color="error" icon="warning" value="true">
+        {{ errorMsg }}
+      </v-alert>
     </div>
+
+  </div>
 </template>
 
 <script>

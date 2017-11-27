@@ -1,7 +1,9 @@
 <template>
   <div>
     <h3>{{ dispCur }}</h3>
-    <div v-if="userId" class="ml1 pointer" @click="addToWatchlist(dispCur)" style = "font-size:1.5em; cursor: pointer; width:20%;">Add to WatchList</div> <br/>
+    <v-btn v-if="userId" @click="addToWatchlist(dispCur)" color="primary">
+      Add to Watchlist
+    </v-btn>
     <div>
         <p>{{ errorMsg }}</p>
     </div>

@@ -4,21 +4,25 @@
 
 <p v-if="!userId">Please create an account or login to access the watchlist feature.</p>
 
-<form>
-  <div class="container">
-    <div>
-      <p>{{ errorMsg }}</p>
-    </div>
-    
-    <ul id="userSearchDisplay" v-if="userId">
-		<li v-for="name in userList" style = "font-size: 1.5em;">
-		  {{ name }}
-		</li>
-		<a href = "/" style = "font-size: 1.5em">Home</a>
-		
-	</ul>
+<div class="container">
+  <div>
+    <p>{{ errorMsg }}</p>
   </div>
-</form>
+  
+  <ul id="userSearchDisplay" v-if="userId">
+    <div class="text-xs-center" v-if="loading">
+      <p>Loading</p>
+      <v-progress-circular indeterminate v-bind:size="70" v-bind:width="7" color="purple"></v-progress-circular></v-progress-circular>
+    </div>
+    <v-list>
+      <v-list-tile v-for="name in userList" :key="name">
+        <v-list-tile-content>
+          <router-link :to="{ path: '/coin/' + name.toLowerCase() }" class="ml1 no-underline">{{ name }}</router-link>
+        </v-list-tile-content>
+      </v-list-tile>
+    </v-list>
+  </ul>
+</div>
 
 </div>
 </template>
@@ -30,7 +34,8 @@
       return {
         username: "",
         errorMsg: "",
-        userList: ""
+        userList: "",
+        loading: false
       }
     },
     computed: {
@@ -49,11 +54,14 @@
     methods: {
       onSignup: function () {
         var _this = this;
+
+        this.loading = true;
         this.$http.post(GC_BACKEND + "/user/ViewWatchList", {
             username: localStorage.getItem(GC_USER_ID)
         }, {}).then(response => {
           var res = response["body"];
           console.log("Got response: " + res[0]);
+          _this.loading = false;
           if (res) {
             _this.userList = res;
             console.log(_this.userList);
@@ -67,6 +75,7 @@
           }
 
         }, response => {
+          _this.loading = false;
           console.log("Error!");
         });
       },
@@ -79,3 +88,19 @@
     }
   }
 </script>
+<style scoped>
+  .ml1:link{
+  	color: black !important; 
+  	text-decoration: none; 
+  	float: right; 
+  	padding: 5px; 
+  	font-size: 1.5em; 
+  	
+  }
+  .ml1:visited{
+  	color:black; 
+  }
+  .ml1:hover{
+  	color: blue; 
+  }
+</style>

@@ -27,7 +27,7 @@
           this.$emit("navToCurrency");
         }
         else if(localStorage.getItem(GC_USER_ID) != null){
-        		this.$router.push("/WatchList");
+        		this.$router.push("/watchlist");
         }
         else {
           this.snackbar = true;

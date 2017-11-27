@@ -19,7 +19,10 @@ export default new Router({
     {
       path: '/coin/:cur',
       name: 'CoinView',
-      component: NavView
+      component: NavView,
+      props: {
+        dispType: 'cur'
+      }
     },
     {
         path: '/login',
@@ -38,8 +41,11 @@ export default new Router({
     		component: UserWatchlistSocketTest
     },
     {
-    		path:'/WatchList',
-    		component: ViewWatchList
+    		path:'/watchlist',
+    		component: NavView,
+        props: {
+          dispType: 'watchlist'
+        }
     }
   ]
 })
