@@ -185,12 +185,11 @@ public class GetCurrencyInformation {
 			}
 			
 		}
+
 		return ticker;
 	}
 	
 	public int getIDFromTicker(String tickerToLookFor){
-		
-	
 		Connection conn = ConnectToDB.getDBConnection();
 		int currencyID = -1;
 		PreparedStatement ps = null;

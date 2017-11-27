@@ -11,16 +11,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cv.AppContext;
-// import com.cv.jdbc.get.UserSearch;
-// import com.cv.jdbc.get.ValidateUser;
-// import com.cv.jdbc.set.AddUser;
 import com.cv.model.UserData;
 import com.cv.model.UserSearchData;
 import com.cv.model.AddTicker;
+import com.cv.model.WatchlistRemove;
 import com.cv.jdbc.set.*; 
 import com.cv.jdbc.get.*;
 import com.cv.response.DefaultResponse;
-//import com.cv.model.UserSearchResponse;
 import com.cv.response.UserSearchResponse;
 import com.cv.response.UserWatchListResponse;
 
@@ -57,7 +54,7 @@ public class UserController {
   
  @CrossOrigin(origins="http://localhost:8080")
  @RequestMapping(value="/user/search", method=RequestMethod.POST)
- public @ResponseBody UserSearchResponse createUser(
+ public @ResponseBody UserSearchResponse userSearch(
      @RequestBody UserSearchData userSearchData) {
 
    System.out.println("Got request to search for user");
@@ -68,7 +65,7 @@ public class UserController {
  
  @CrossOrigin(origins="http://localhost:8080")
  @RequestMapping(value="/user/addTicker", method=RequestMethod.POST)
- public @ResponseBody DefaultResponse createUser(
+ public @ResponseBody DefaultResponse addTicker(
      @RequestBody AddTicker addTicker) {
    //String parsedTicker = tickerName.substring(11, tickerName.lastIndexOf('"'));
    WatchListSetters watchListSetters = new WatchListSetters(); 
@@ -79,10 +76,9 @@ public class UserController {
    return new DefaultResponse(okay);
  }
 
- @CrossOrigin(origins="http://localhost:8080")
- @RequestMapping(value="/user/ViewWatchList", method=RequestMethod.POST)
- public @ResponseBody Vector<String> getWatchList(
-     @RequestBody String username) {
+  @CrossOrigin(origins="http://localhost:8080")
+  @RequestMapping(value="/user/ViewWatchList", method=RequestMethod.POST)
+  public @ResponseBody Vector<String> getWatchList(@RequestBody String username) {
    //String parsedTicker = tickerName.substring(11, tickerName.lastIndexOf('"'));
    WatchListGetters watchListGetters = new WatchListGetters(); 
    String parsedUsername = username.substring(13, username.lastIndexOf('"'));
@@ -100,13 +96,15 @@ public class UserController {
    //return new UserWatchListResponse(allCurrencies);
     //return allStringCurrency; 
     return allCurrencies; 
- }
+  }
 
- //@CrossOrigin(origins="http://localhost:8080")
- //@RequestMapping(value="/user/removeWatchlist", method=RequestMethod.POST)
- //public @ResponseBody boolean removeFromWatchlist(@RequestBody WatchlistRemove watchListRemove) {
- // 
- //}
+  @CrossOrigin(origins="http://localhost:8080")
+  @RequestMapping(value="/user/removeWatchList", method=RequestMethod.POST)
+  public @ResponseBody boolean removeFromWatchlist(@RequestBody WatchlistRemove watchListRemove) {
+    System.out.println("Got username " + watchListRemove.getUsername());
+    WatchListSetters watchListSetters = new WatchListSetters();
+    return watchListSetters.removeWatchTickerFromUser(watchListRemove.getUsername(), watchListRemove.getCoin());
+  }
 
 //vector<String> watchListGetters.getUserWatchListString(String username);
 

@@ -26,7 +26,7 @@ public class WatchListGetters {
 		
 		return stringWatchList;
 	}
-	
+
 	public Vector<Integer> getUserWatchListInt(String username){
 		Connection conn = ConnectToDB.getDBConnection();
 		PreparedStatement ps = null;
@@ -42,25 +42,21 @@ public class WatchListGetters {
 		
 	//	if(usernameValidation.isExistingUsername(username)) { Took out username validation for speeds sake
 			try {
-				
 				String watchListStatement = "SELECT * FROM UserWatchList WHERE userID = ?";
 				ps = conn.prepareStatement(watchListStatement);
 				ps.setInt(1, userID);
 				
 				rs = ps.executeQuery();
-				
 			
 				while(rs.next()) {
-					
 					int tempCurrencyID = rs.getInt("currencyID");
 					myUsersWatchList.add(tempCurrencyID);
-				
-					
 				}
+			} 
+      catch(Exception e){
 			
-			} catch(Exception e){
-			
-			} finally {
+			} 
+      finally {
 				try {
 					if (rs != null) {
 						rs.close();
@@ -78,7 +74,7 @@ public class WatchListGetters {
 		//}
 		return myUsersWatchList;
 	}
-	
+
 	public boolean isAlreadyInWatchList(int userID, int currencyID ) {
 		Connection conn = ConnectToDB.getDBConnection();
 		PreparedStatement ps = null;

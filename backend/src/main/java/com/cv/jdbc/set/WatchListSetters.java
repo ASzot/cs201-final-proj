@@ -56,9 +56,11 @@ public class WatchListSetters {
 				
 				added = true;
 				
-			} catch(Exception e){
+			} 
+      catch(Exception e){
 				return added;
-			} finally {
+			} 
+      finally {
 				try {
 					if (rs != null) {
 						rs.close();
@@ -77,8 +79,45 @@ public class WatchListSetters {
 		} 
 			
 		return added;
-		
 	}
+
+  public boolean removeWatchTickerFromUser(String username, String currencyName) {
+		Connection conn = ConnectToDB.getDBConnection();
+
+    GetCurrencyInformation gci = new GetCurrencyInformation();
+    int currencyID = gci.getIDFromTicker(currencyName);
+
+		ValidateUser myUserValidation = new ValidateUser();
+		int userID = myUserValidation.getUserID(username);
+
+    try {
+      String sqlStatement = "DELETE FROM UserWatchList WHERE userID = ? AND currencyID = ?";
+      ps = conn.prepareStatement(sqlStatement);
+      ps.setInt(1, userID);
+      ps.setInt(2, currencyID);
+
+      ps.addBatch();
+      ps.executeBatch();
+      conn.commit();
+    }
+    catch(Exception e){
+      return false;
+    } 
+    finally {
+      try {
+        if (ps != null) {
+          ps.close();
+        }
+        if (conn != null) {
+          conn.close();
+        }
+      } catch (SQLException sqle) {
+        System.out.println("sqle: " + sqle.getMessage());
+      }
+    }
+
+    return true;
+  }
 	/*
 	public boolean removeFromWatchList(int userID, int currencyID) {
 		

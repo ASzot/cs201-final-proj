@@ -38,8 +38,8 @@
       <v-container>
         <v-layout>
           <v-flex xs12 id="content-space">
-            <currency-view v-if="dispType=='cur'" v-bind:dispCur="dispCur"></currency-view>
-            <view-watch-list v-if="dispType=='watchlist'"></view-watch-list>
+            <currency-view v-if="dispType=='cur'" @showNotification="showNotification" v-bind:dispCur="dispCur"></currency-view>
+            <view-watch-list @showNotification="showNotification" v-if="dispType=='watchlist'"></view-watch-list>
           </v-flex>
         </v-layout>
       </v-container>
@@ -52,6 +52,13 @@
       {{ errorMsg }}
       <v-btn flat color="green" @click.native="$router.push('/login')">Login</v-btn>
       <v-btn flat color="pink" @click.native="snackbar = false">Close</v-btn>
+    </v-snackbar>
+    <v-snackbar
+      :timeout="6000"
+      :top="true"
+      v-model="notSnackbar">
+      {{ notification }}
+      <v-btn flat color="pink" @click.native="notSnackbar = false">Close</v-btn>
     </v-snackbar>
   </v-app>
 </template>
@@ -69,6 +76,10 @@
     },
     props: ['dispType'],
     methods: {
+      showNotification: function (not) {
+        this.notification = not
+        this.notSnackbar = true;
+      },
       showError: function (message) {
         this.errorMsg = message;
         this.snackbar = true;
@@ -92,6 +103,11 @@
     created: function () {
       this.$on("navToCurrency", this.navToCurrency);
       this.$on("navToMain", this.navToMain);
+
+      // By default set to display currency type.
+      if (this.dispType == null || this.dispType == "") {
+        this.dispType = "cur";
+      }
     },
     beforeDestroy: function () {
       this.$off('navToCurrency', this.navToCurrency);
@@ -119,6 +135,8 @@
       errorMsg: "",
       drawer: true,
       navBarState: 'main',
+      notification: "",
+      notSnackbar: false,
     }),
     watch: {
       drawer: function(val) {

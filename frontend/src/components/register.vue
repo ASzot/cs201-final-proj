@@ -1,29 +1,27 @@
 <template>
-<div>
-<h2 style = "text-align:center; margin-top: 3%;">Signup Form</h2>
+  <div>
+    <h2 style = "text-align:center; margin-top: 3%;">Signup Form</h2>
 
-<form>
-  <div class="container" style = "text-align:center; margin-top: 3%;">
-    <label><b>Username</b></label>
-    <input type="text" placeholder="Enter Username" v-model="username" required>
+    <div class="container" style = "text-align:center; margin-top: 3%;">
+      <label><b>Username</b></label>
+      <input type="text" placeholder="Enter Username" v-model="username" required>
 
-    <label><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" v-model="pass" required>
+      <label><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" v-model="pass" required>
 
-    <label><b>Repeat Password</b></label>
-    <input type="password" placeholder="Repeat Password" v-model="passRepeat" required>
+      <label><b>Repeat Password</b></label>
+      <input type="password" placeholder="Repeat Password" v-model="passRepeat" required>
 
-    <div class="clearfix" style = "padding: 30px;">
-      <a href = "/"><button type="button" class="cancelbtn" style = "padding: 10px;">Cancel</button></a>
-      <button type="submit" @click="onSignup" class="signupbtn" style = "padding: 10px;">Sign Up</button>
-    </div>
+      <div class="clearfix" style = "padding: 30px;">
+        <a href = "/"><button type="button" class="cancelbtn" style = "padding: 10px;">Cancel</button></a>
+        <button type="submit" @click="onSignup" class="signupbtn" style = "padding: 10px;">Sign Up</button>
+      </div>
 
-    <div>
-      <p>{{ errorMsg }}</p>
+      <v-alert v-if="errorMsg != ''" color="error" icon="warning" value="true">
+        {{ errorMsg }}
+      </v-alert>
     </div>
   </div>
-</form>
-</div>
 </template>
 
 <script>
@@ -54,14 +52,14 @@
           var res = response.body;
           console.log("Got response");
           if (!res.okay) {
-            _this.errorMsg = "Could not log in!";
+            _this.errorMsg = "Could not register account";
           }
           else {
             console.log("Loggin in...?");
             _this.saveUserData();
             console.log("Logged in!");
             // Go back to home page.
-            this.$router.push('/');
+            this.$router.push({ path: '/' });
           }
 
         }, response => {

@@ -1,6 +1,7 @@
 <template>
   <div>
     <h3>{{ dispCur }}</h3>
+    <v-progress-circular v-if="loadingWatchList" indeterminate color="purple"></v-progress-circular>
     <v-btn v-if="userId" @click="addToWatchlist(dispCur)" color="primary">
       Add to Watchlist
     </v-btn>
@@ -113,6 +114,7 @@
         // Configure data start
         selectedDataStart: { text: '1 month', val: "2629743" },
         errorMsg: "",
+        loadingWatchList: false,
         showOrderBook: false,
         orderBookMsg: "Show Order Book",
         // Configure starting moving averages
@@ -216,21 +218,22 @@
       addToWatchlist: function (dispCur) {
         console.log(dispCur);
         console.log("User id: " + localStorage.getItem(GC_USER_ID));
+
+        this.loadingWatchList = true;
         var _this = this;
         this.$http.post(GC_BACKEND + "/user/addTicker", {
             ticker: dispCur,
             userID: localStorage.getItem(GC_USER_ID)
         }, {}).then(response => {
+          _this.loadingWatchList = false;
           var res = response.body;
           console.log("Got response");
           if (!res.okay) {
-            _this.errorMsg = "You have already added the ticker";
-            alert("You have already added the ticker " + dispCur);
+            _this.$emit("showNotification", "You already added the ticker");
           }
           else {
             console.log(dispCur + " Added");
-            alert(dispCur + " has been added to your watch list");
-            location.reload();
+            _this.$emit("showNotification", dispCur + " has been added to your watch list");
           }
 
         }, response => {

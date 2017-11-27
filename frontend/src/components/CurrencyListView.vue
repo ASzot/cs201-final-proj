@@ -1,5 +1,9 @@
 <template>
   <div class='curr-list-container'>
+    <div class="text-xs-center" v-if="loading">
+      <p>Loading</p>
+      <v-progress-circular indeterminate v-bind:size="70" v-bind:width="7" color="purple"></v-progress-circular></v-progress-circular>
+    </div>
     <v-text-field v-model="searchText" v-on:keyup="onSearchChange" label="Search"></v-text-field>
     <v-list dense>
       <v-list-tile-content v-for="ticker in filteredTickers" :key="ticker" >
@@ -18,7 +22,8 @@
       return {
         filteredTickers: [],
         tickers: [],
-        searchText: ""
+        searchText: "",
+        loading: false
       }
     },
     methods: {
@@ -43,11 +48,14 @@
     mounted: function () {
       var _this = this;
       var _ = this._;
+
+      this.loading = true;
       this.$http.get(GC_BACKEND + "/exchange/markets", {
         params: {
           allowedTos: "usd,usdt"
         }
       }, {}).then(response => {
+        _this.loading = false;
         var res = response.body;
         // Get the from tickers
         var fromTickers = _.map(res, function (m) {

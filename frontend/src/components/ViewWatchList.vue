@@ -14,13 +14,20 @@
       <p>Loading</p>
       <v-progress-circular indeterminate v-bind:size="70" v-bind:width="7" color="purple"></v-progress-circular></v-progress-circular>
     </div>
-    <v-list>
+
+    <v-list v-if="userList.length != 0">
       <v-list-tile v-for="name in userList" :key="name">
         <v-list-tile-content>
-          <router-link :to="{ path: '/coin/' + name.toLowerCase() }" class="ml1 no-underline">{{ name }}</router-link>
+          <v-btn flat @click="$router.push('/coin/' + name.toLowerCase())">{{ name }} </v-btn></v-btn>
         </v-list-tile-content>
+        <v-btn fab dark color="red" @click="removeWatchList(name)">
+          <v-icon dark>remove</v-icon>
+        </v-btn>
       </v-list-tile>
     </v-list>
+    <v-alert v-if="userList.length == 0 && !loading" color="info" icon="info" value="true">
+      Your watch list is empty
+    </v-alert>
   </ul>
 </div>
 
@@ -52,6 +59,33 @@
     		}
     },
     methods: {
+      removeWatchList: function (coinName) {
+        console.log("Removing from watch list");
+
+        var _this = this;
+        this.$http.post(GC_BACKEND + "/user/removeWatchList", {
+          username: localStorage.getItem(GC_USER_ID),
+          coin: coinName
+        }, {}).then(response => {
+          var res = response.body;
+
+          var msg = "";
+          if (res) {
+            msg = "Removed currency from watchlist";
+          }
+          else {
+            msg = "Could not remove currency from watchlist";
+          }
+
+          _this.$emit("showNotification", msg);
+
+          // Remove from the display list.
+          var index = _this.userList.indexOf(coinName);
+          _this.userList.splice(index, 1);
+        }, response => {
+          console.log("Error");
+        });
+      },
       onSignup: function () {
         var _this = this;
 
@@ -73,7 +107,6 @@
             // Go back to home page.
             //router.push('/');
           }
-
         }, response => {
           _this.loading = false;
           console.log("Error!");
