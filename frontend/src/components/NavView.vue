@@ -19,9 +19,6 @@
         <v-btn block color="secondary" @click="navToMain" dark>Back</v-btn>
         <currency-list-view v-on:changeDispCur="changeDispCur"></currency-list-view>
       </div>
-    <div v-if="userId">
-		<ViewWatchList></ViewWatchList>
-	</div>
     </v-navigation-drawer>
     <v-toolbar dark color="blue">
       <v-toolbar-title>

@@ -26,7 +26,7 @@
         if (innerText == "Currencies") {
           this.$emit("navToCurrency");
         }
-        else if(localStorage.getItem(GC_USER_ID) != null){
+        else if(innerText == "Watchlist") {
         		this.$router.push("/watchlist");
         }
         else {
@@ -37,8 +37,8 @@
     },
     data: () => ({
       items: [
-        { icon: 'trending_up', text: 'Currencies', onClick:'onCurrency' },
-        //{ icon: 'list' , text: 'UserWatchList'}
+        { icon: 'trending_up', text: 'Currencies' },
+        { icon: 'list' , text: 'Watchlist'}
       ]
     })
   }
