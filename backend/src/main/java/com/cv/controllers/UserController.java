@@ -29,6 +29,7 @@ import com.cv.UserWatchListResponse;
 public class UserController {
   @Autowired
   private AppContext appContext;
+  private Vector<String> allWatchLists = new Vector<String>(); 
 
   @CrossOrigin(origins="http://localhost:8080")
   @RequestMapping(value="/user/login", method=RequestMethod.POST)
@@ -72,11 +73,20 @@ public class UserController {
  public @ResponseBody DefaultResponse createUser(
      @RequestBody AddTicker addTicker) {
    //String parsedTicker = tickerName.substring(11, tickerName.lastIndexOf('"'));
-   WatchListSetters watchListSetters = new WatchListSetters(); 
-   System.out.println("Printing ticker value: " + addTicker.getTicker() + " printing userid value: " + addTicker.getUserID());
-   boolean okay = watchListSetters.addTickerStringToWatchList(addTicker.getUserID(), addTicker.getTicker()); 
-   System.out.print("testing add return value: " + okay);
+   // WatchListSetters watchListSetters = new WatchListSetters(); 
+   // System.out.println("Printing ticker value: " + addTicker.getTicker() + " printing userid value: " + addTicker.getUserID());
+   // boolean okay = watchListSetters.addTickerStringToWatchList(addTicker.getUserID(), addTicker.getTicker()); 
+   // System.out.print("testing add return value: " + okay);
    // System.out.println(okay);
+   boolean okay = true; 
+   for(int i = 0; i < allWatchLists.size(); i++){
+      if(allWatchLists.get(i).equals(addTicker.getTicker())){
+        okay = false; 
+      }
+   }
+   if(okay == true){
+    allWatchLists.add(addTicker.getTicker());
+   }
    return new DefaultResponse(okay);
  }
 
@@ -85,22 +95,24 @@ public class UserController {
  public @ResponseBody Vector<String> createUser(
      @RequestBody String username) {
    //String parsedTicker = tickerName.substring(11, tickerName.lastIndexOf('"'));
-   WatchListGetters watchListGetters = new WatchListGetters(); 
-   String parsedUsername = username.substring(13, username.lastIndexOf('"'));
-   System.out.println("Printing username for viewwatchlist: " + parsedUsername);
-   //boolean okay = watchListGetters.addTickerStringToWatchList(addTicker.getUserID(), addTicker.getTicker()); 
-   Vector<String> allCurrencies = watchListGetters.getUserWatchListString(parsedUsername);
-   System.out.println("all currencies size: " + allCurrencies.size());
-   String allStringCurrency = ""; 
-   for(int i = 0; i < allCurrencies.size(); i++){
-    System.out.println("Following currency: " + allCurrencies.get(i));
-    allStringCurrency += (allCurrencies.get(i) + ",");
-   }
-   //System.out.print("testing add return value: " + okay);
-    System.out.println(allStringCurrency);
-   //return new UserWatchListResponse(allCurrencies);
-    //return allStringCurrency; 
-    return allCurrencies; 
+   // WatchListGetters watchListGetters = new WatchListGetters(); 
+   // String parsedUsername = username.substring(13, username.lastIndexOf('"'));
+   // System.out.println("Printing username for viewwatchlist: " + parsedUsername);
+   // //boolean okay = watchListGetters.addTickerStringToWatchList(addTicker.getUserID(), addTicker.getTicker()); 
+   // Vector<String> allCurrencies = watchListGetters.getUserWatchListString(parsedUsername);
+   // System.out.println("all currencies size: " + allCurrencies.size());
+   // String allStringCurrency = ""; 
+   // for(int i = 0; i < allCurrencies.size(); i++){
+   //  System.out.println("Following currency: " + allCurrencies.get(i));
+   //  allStringCurrency += (allCurrencies.get(i) + ",");
+   // }
+   // //System.out.print("testing add return value: " + okay);
+   //  //System.out.println(allStringCurrency);
+   // //return new UserWatchListResponse(allCurrencies);
+   //  //return allStringCurrency; 
+   //  System.out.println("All Watch Lists: " + allWatchLists); 
+    return allWatchLists; 
+    //return allCurrencies; 
  }
 
 //vector<String> watchListGetters.getUserWatchListString(String username);
